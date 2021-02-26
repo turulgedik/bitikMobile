@@ -1,0 +1,42 @@
+const icons={
+    Logo:require('../icons/Logo.png'),
+    User:require('../icons/login_user.png'),
+    Password:require('../icons/login_password.png'),
+    Email:require('../icons/login_email.png'),
+    Eye:require('../icons/eye.png'),
+    Notification:require('../icons/notification.png'),
+    Setting:require('../icons/icon - setting.png'),
+    IconHome:require('../icons/icon-home.png'),
+    IconGlobe:require('../icons/icon-globe.png'),
+    IconFile:require('../icons/icon-file.png'),
+    IconCrosshair:require('../icons/icon-crosshair.png'),
+    IconMonitor:require('../icons/icon-monitor.png'),
+    Up:require('../icons/up.png'),
+    Down:require('../icons/down.png'),
+    New:require('../icons/new.png'),
+    Users:require('../icons/users.png'),
+    Book:require('../icons/book.png'),
+    Edit:require('../icons/edit.png'),
+    Remove:require('../icons/remove.png'),
+    Call:require('../icons/call.png'),
+    Lock:require('../icons/lock.png'),
+    Unlock:require('../icons/unlock.png'),
+    Image:require('../icons/image.png'),
+    Video:require('../icons/video.png'),
+    Megaphone:require('../icons/megaphone.png'),
+    Question:require('../icons/question.png'),
+    Back:require('../icons/back.png'),
+    Check:require('../icons/check.png'),
+
+    TeacherSMS:require('../icons/teacher_sms_bg.png'),
+    StudentSMS:require('../icons/student_sms_bg.png'),
+    FamilySMS:require('../icons/family_sms_bg.png'),
+    SendSMS:require('../icons/send_sms_bg.png'),
+    RollBackSMS:require('../icons/rollback_sms_bg.png'),
+    ManageCONCAT:require('../icons/manage_concat_bg.png'),
+
+    ClassRoom:require('../icons/classroom.png'),
+
+}
+
+export default icons
