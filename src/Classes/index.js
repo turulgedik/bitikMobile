@@ -22,7 +22,7 @@ export class Classes extends Component {
                         <Text style={{fontSize:20}}>{elem.level+" / "+elem.name}</Text>
                         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                             <Image source={icons.Users} style={{height:30,width:30,marginTop:10}} resizeMode='contain'/>
-                            <Text style={{fontSize:15}}>{students.filter(s=>s._class._account.id===elem._account.id).length}</Text>
+                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class._account.id===elem._account.id).length}</Text>
                         </View>
                     </View>
                     <View style={{flex:0.7}}>

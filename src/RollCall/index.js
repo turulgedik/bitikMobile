@@ -202,7 +202,7 @@ class RollCall extends Component {
                                                     this.remove(roll.id)
                                                 }
                                             }}>
-                                                <Image source={{uri:BASE_URL+student._account.image}} style={{width:'100%',flex:1,marginBottom:10}} resizeMode='contain'/>
+                                                <Image source={student._account.image===null?icons.User:{uri:BASE_URL+student._account.image}} style={{width:'100%',flex:1,marginBottom:10}} resizeMode='contain'/>
                                                 <Text>{student._account.first_name+" "+student._account.last_name}</Text>
                                             </TouchableOpacity>
                                         </View>
