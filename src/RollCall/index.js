@@ -11,6 +11,7 @@ import axios from 'axios'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Alert from '../components/Alert'
 import {Actions} from 'react-native-router-flux'
+import {BASE_URL} from '../redux/actions/host'
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -37,16 +38,8 @@ class RollCall extends Component {
 
     componentDidMount(){
         this.props.getRollCalls()
-        this.getStudys()
     }
 
-    getStudys=()=>{
-        axios.get('http://localhost:8000/school/api/Studys/')
-        .then(res=>{
-            
-            this.setState({studys:res.data})
-        })
-    }
 
     add=(id)=>{
 
@@ -189,18 +182,19 @@ class RollCall extends Component {
                         
                     </View>
                 </View>
-                <View style={{marginHorizontal:-10,flex:1}}>
+                <ScrollView style={{marginHorizontal:-10,flex:1}}>
                     <View style={{width:'100%',padding:10}}>
                         <Text style={{color:'#042C5C', fontSize:20, marginBottom:20}}>{_class.level+" / "+_class.name + " Yoklama Listesi"}</Text>
                         <View style={{flexDirection:'row',flexWrap:'wrap'}}>
                             {
                                 students.filter(s=>s._class!==null&&s._class._account.id===id).map(student=>{
+                                    console.log("image",'"'+BASE_URL+student._account.image+'"')
                                     const roll=rollcalls.rollcalls.filter(r=>r._student._account.id===student._account.id &&
                                         r.index===(this.state.selectedStudyIndex+1) && r.day===this.state.date).length>0?
                                         rollcalls.rollcalls.find(r=>r._student._account.id===student._account.id):null
                                     return (
                                         <View style={styles.studentView}>
-                                            <TouchableOpacity style={{...styles.student,backgroundColor:roll!==null?'#e74c3c':'white'}} onPress={()=>{
+                                            <TouchableOpacity style={{...styles.student,backgroundColor:roll!==null?'#e74c3c':'white', }} onPress={()=>{
                                                 if(roll===null){
                                                     
                                                     this.add(student._account.id)
@@ -208,7 +202,7 @@ class RollCall extends Component {
                                                     this.remove(roll.id)
                                                 }
                                             }}>
-                                                <Image source={icons.User} style={{flex:1,marginBottom:10}} resizeMode='contain'/>
+                                                <Image source={{uri:BASE_URL+student._account.image}} style={{width:'100%',flex:1,marginBottom:10}} resizeMode='contain'/>
                                                 <Text>{student._account.first_name+" "+student._account.last_name}</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -217,7 +211,7 @@ class RollCall extends Component {
                             }
                         </View>
                     </View>
-                </View>
+                </ScrollView>
                 <View style={{marginHorizontal:-10,padding:10, borderTopColor:'#1e1e1e',borderTopWidth:0.5}}>
                     <Text>Toplam Gelmeyen Sayısı : {rollcalls.rollcalls.filter(r=>r._student._class._account.id===id &&
                                         r.index===(this.state.selectedStudyIndex+1) && r.day===this.state.date).length}</Text>
