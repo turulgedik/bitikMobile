@@ -11,6 +11,7 @@ import Alert from '../components/Alert'
 import {TrDateTime} from '../components/TrDateTime'
 import _ from 'lodash'
 import {Actions} from 'react-native-router-flux'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 class ATReports extends Component {
 
@@ -53,7 +54,7 @@ class ATReports extends Component {
         const monthReports=sortReports.filter(r=> {return(Moment(new Date(r.dateTime)).format('MM')===Moment(new Date()).format('MM'))})
 
         return (
-            <View style={styles.background}>
+            <View style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
 
                 <Alert ref={node=>(this._alert=node)}/>
                 <View style={styles.title}>

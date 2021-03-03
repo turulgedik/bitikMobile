@@ -11,6 +11,7 @@ import Alert from '../components/Alert'
 import {TrDateTime} from '../components/TrDateTime'
 import _ from 'lodash'
 import {Actions} from 'react-native-router-flux'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 class RollCallReport extends Component {
 
@@ -61,7 +62,7 @@ class RollCallReport extends Component {
         },{})
         
         return (
-            <View style={styles.background}>
+            <View style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
 
                 <Alert ref={node=>(this._alert=node)}/>
                 <View style={styles.title}>
@@ -92,7 +93,7 @@ class RollCallReport extends Component {
                                 {
                                     _.map(_.groupBy(dayReports,'day'),(item,i)=>{
                                         var date=TrDateTime(new Date(i))
-                                        
+                                        console.log("timetable",item.length)
                                         return(
                                             <View style={{width:'100%', height:100, flexDirection:'row'}}>
                                                 <View style={{flex:1,height:100,flexDirection:'row', alignItems:'center'}}>

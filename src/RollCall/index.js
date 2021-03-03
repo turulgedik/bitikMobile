@@ -12,6 +12,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Alert from '../components/Alert'
 import {Actions} from 'react-native-router-flux'
 import {BASE_URL} from '../redux/actions/host'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -116,7 +117,7 @@ class RollCall extends Component {
         })
         */
         return (
-            <View style={styles.background}>
+            <View style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
                 <MyModal ref={node=>(this._myModal=node)}>
                     <View style={styles.modal}>
                         <MyModal ref={node=>(this._datePicker=node)}>

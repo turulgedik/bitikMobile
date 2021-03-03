@@ -11,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { Video } from 'expo-av';
 import Moment from 'moment'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 const ImageType=ImagePicker.MediaTypeOptions.Images
 const VideoType=ImagePicker.MediaTypeOptions.Videos
@@ -87,7 +88,7 @@ export class _Class extends Component {
         const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account.id):null
         console.log("app",students)
         return (
-            <ScrollView style={styles.background}>
+            <ScrollView style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
                 {
                     app.loading?
                     <MyModal show={true} closeButton={false}>
