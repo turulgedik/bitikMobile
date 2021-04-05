@@ -14,6 +14,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadUser} from './redux/actions/auth'
 import Splash from './Splash'
 
+import StudentHome from '../src/StudentMode/Home'
+import sRollCallReport from '../src/StudentMode/Reports/RollCallReport'
+
 
 export class MyRouter extends Component {
 
@@ -42,12 +45,20 @@ export class MyRouter extends Component {
     }
 
     render() {
+        const {user} = this.props
+        console.log(user)
         return (
             <Router>
                 <Stack key='root' hideNavBar={true}>
                 {
                     this.props.auth.isLoading || this.state.token===''?
                         <Scene component={Splash} key='splash' hideNavBar={true}/>:
+                    
+                    this.props.auth.isAuth && user!==null && user.user_type===5?
+                        <Stack hideNavBar={true}>
+                            <Scene key='studentHome' component={StudentHome} title='studentHome' hideNavBar={true}/>
+                            <Scene key='sRollCall' component={sRollCallReport} title='sRollCall' hideNavBar={true}/>
+                        </Stack>:
                     this.props.auth.isAuth?
                         <Stack hideNavBar={true}>
                             <Scene key='home' component={Home} title='home' hideNavBar={true}/>
@@ -70,7 +81,8 @@ export class MyRouter extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    auth:state.User.auth
+    auth:state.User.auth,
+    user:state.User.user
 })
 
 const mapDispatchToProps = {

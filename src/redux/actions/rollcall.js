@@ -4,13 +4,13 @@ import {REMOVE_ROLLCALL,LOADING_ROLLCALL,ADD_ROLLCALL,LOADED_ROLLCALL} from '../
 import {tokenConfig} from './school'
 import {BASE_URL} from './host'
 
-export const getRollCalls=()=>(dispatch,getState)=>{
+export const getRollCalls=(id=null)=>(dispatch,getState)=>{
 
     dispatch({type:LOADING_ROLLCALL})
 
-    axios.get(BASE_URL+'/school/api/RollCall/',tokenConfig(getState))
+    axios.get((id===null)?BASE_URL+'/school/api/RollCall/':BASE_URL+'/school/api/RollCall/'+'?student='+id,tokenConfig(getState))
     .then(res=>{
-        console.log('test',res.data)
+        //console.log('test',res.data)
       dispatch({
         type:LOADED_ROLLCALL,
         payload:res.data

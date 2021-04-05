@@ -27,6 +27,12 @@ const icons={
     Question:require('../icons/question.png'),
     Back:require('../icons/back.png'),
     Check:require('../icons/check.png'),
+    Study:require('../icons/study.png'),
+    Clock:require('../icons/clock.png'),
+    Date:require('../icons/date.png'),
+    RollCallReport:require('../icons/rollCallReport.png'),
+    ATReport:require('../icons/atReport.png'),
+    Exit:require('../icons/exit.png'),
 
     TeacherSMS:require('../icons/teacher_sms_bg.png'),
     StudentSMS:require('../icons/student_sms_bg.png'),

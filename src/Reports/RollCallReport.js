@@ -19,7 +19,7 @@ class RollCallReport extends Component {
         super(props)
 
         const {id,classes}=props
-        const _class=classes.find(c=>c._account.id===id)
+        const _class=classes.find(c=>c._account===id)
 
         this.state={
             //selectedGroup:_class.groups.length>0?_class.groups[0]:null,
@@ -37,10 +37,11 @@ class RollCallReport extends Component {
     render() {
 
         const {id,classes,students,rollcalls,connecteds}=this.props
-        const _class=classes.find(c=>c._account.id===id)
-        const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account.id):null
-        const sortRollCalls=rollcalls.rollcalls.sort((a,b)=>new Date(b.day)-new Date(a.day))
-
+        const _class=classes.find(c=>c._account===id)
+        const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
+        const filter=rollcalls.rollcalls.filter(r=>r._student._class===id)
+        const sortRollCalls=filter.sort((a,b)=>new Date(b.day)-new Date(a.day))
+        console.log('rolls',filter)
         var today=TrDateTime(new Date(Moment(new Date()).format('YYYY-MM-DD')))
         var startDateForDay=TrDateTime(new Date())
         startDateForDay.add(-6)
@@ -75,7 +76,7 @@ class RollCallReport extends Component {
                         <Text style={{color:'#042C5C',fontSize:20}}>{_class.level + " / "+_class.name}</Text>
                         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                             <Image source={icons.Users} style={{height:20,width:20}} resizeMode='contain'/>
-                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class._account.id===id).length}</Text>
+                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
                         </View>
                     </View>
                     <View style={{...styles.profileButton,backgroundColor:con!==null && con!==undefined?"#2ecc71":"#e74c3c"}}>

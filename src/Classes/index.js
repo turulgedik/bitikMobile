@@ -10,12 +10,12 @@ import { ifIphoneX } from 'react-native-iphone-x-helper'
 export class Classes extends Component {
     render() {
         const {level,classes,students,connecteds} = this.props
-        console.log('classes',students)
+
         const classesItems=classes.filter(c=>c.level===level).map((elem,i)=>{
-            const con=connecteds!==undefined?connecteds.find(element=>element.id===elem._account.id):null
+            const con=connecteds!==undefined?connecteds.find(element=>element.id===elem._account):null
             return(
                 <TouchableOpacity style={styles.groupItem} onPress={()=>{
-                    Actions._class({id:elem._account.id})
+                    Actions._class({id:elem._account})
                 }}>
                     <View style={{flex:1,height:'100%',marginRight:5}}>
                         <Image source={icons.ClassRoom} style={{height:'100%',width:'100%'}} resizeMode='center'/>
@@ -24,7 +24,7 @@ export class Classes extends Component {
                         <Text style={{fontSize:20}}>{elem.level+" / "+elem.name}</Text>
                         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                             <Image source={icons.Users} style={{height:30,width:30,marginTop:10}} resizeMode='contain'/>
-                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class._account.id===elem._account.id).length}</Text>
+                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class===elem._account).length}</Text>
                         </View>
                     </View>
                     <View style={{flex:0.7}}>

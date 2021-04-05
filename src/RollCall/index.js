@@ -22,7 +22,7 @@ class RollCall extends Component {
         super(props)
 
         const {id,classes}=props
-        const _class=classes.find(c=>c._account.id===id)
+        const _class=classes.find(c=>c._account===id)
 
         this.state={
             //selectedGroup:_class.groups.length>0?_class.groups[0]:null,
@@ -72,15 +72,15 @@ class RollCall extends Component {
     }
 
     onChangeIndex=(index)=>{
-        const _class=this.props.classes.find(c=>c._account.id===this.props.id)
+        const _class=this.props.classes.find(c=>c._account===this.props.id)
         //this.setState({selectedGroup:_class.groups[index]})
     }
 
     render() {
         const {id,classes,students,rollcalls}=this.props
-        const _class=classes.find(c=>c._account.id===id)
+        const _class=classes.find(c=>c._account===id)
         var nowDate=new Date(this.state.date)
-        console.log('timeTable',nowDate.getDay())
+        console.log('_class',_class)
         /*
         const groups=_class.groups.map((elem,i)=>{
             return(
@@ -188,7 +188,7 @@ class RollCall extends Component {
                         <Text style={{color:'#042C5C', fontSize:20, marginBottom:20}}>{_class.level+" / "+_class.name + " Yoklama Listesi"}</Text>
                         <View style={{flexDirection:'row',flexWrap:'wrap'}}>
                             {
-                                students.filter(s=>s._class!==null&&s._class._account.id===id).map(student=>{
+                                students.filter(s=>s._class!==null&&s._class===id).map(student=>{
                                     console.log("image",'"'+BASE_URL+student._account.image+'"')
                                     const roll=rollcalls.rollcalls.filter(r=>r._student._account.id===student._account.id &&
                                         r.index===(this.state.selectedStudyIndex+1) && r.day===this.state.date).length>0?
@@ -214,9 +214,9 @@ class RollCall extends Component {
                     </View>
                 </ScrollView>
                 <View style={{marginHorizontal:-10,padding:10, borderTopColor:'#1e1e1e',borderTopWidth:0.5}}>
-                    <Text>Toplam Gelmeyen Sayısı : {rollcalls.rollcalls.filter(r=>r._student._class._account.id===id &&
+                    <Text>Toplam Gelmeyen Sayısı : {rollcalls.rollcalls.filter(r=>r._student._class===id &&
                                         r.index===(this.state.selectedStudyIndex+1) && r.day===this.state.date).length}</Text>
-                    <Text>Sınıf Mevcudu : {students.filter(s=>s._class!==null&&s._class._account.id===id).length}</Text>
+                    <Text>Sınıf Mevcudu : {students.filter(s=>s._class!==null&&s._class===id).length}</Text>
                 </View>
             </View>
         )

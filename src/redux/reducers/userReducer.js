@@ -51,7 +51,7 @@ export default function(state=initialState,action){
             return{
                 ...state,
                 auth:{...state.auth,isLoading:false,isAuth:true,token:action.payload.token},
-                user:action.payload
+                user:action.payload.user!==undefined?action.payload.user:action.payload
             }
         case LOGIN_SUCCESS:
             saveToken(action.payload.token)

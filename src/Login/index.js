@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {View,Text,TouchableOpacity,Image} from 'react-native'
+import {View,Text,TouchableOpacity,Image,KeyboardAvoidingView,Platform} from 'react-native'
 import {styles} from './style'
 import { StatusBar } from 'expo-status-bar';
 import icons from '../Icons'
@@ -33,7 +33,7 @@ class Login extends Component {
     render() {
         console.log('user',this.props.user)
         return (
-            <View style={styles.background}>
+            <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} style={styles.background}>
                 
                 <View style={styles.topView}>
                     <View style={{width:'80%',height:'50%',borderWidth:5,borderColor:'#34495e',backgroundColor:'white'}}>
@@ -81,7 +81,7 @@ class Login extends Component {
                 </View>
 
                 <StatusBar hidden={true}/>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }

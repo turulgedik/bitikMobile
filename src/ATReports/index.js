@@ -37,8 +37,8 @@ class ATReports extends Component {
     render() {
 
         const {id,classes,connecteds}=this.props
-        const _class=classes.find(c=>c._account.id===id)
-        const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account.id):null
+        const _class=classes.find(c=>c._account===id)
+        const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
         const at=this.props.at.filter(s=>s._class===id)
 
         const sortReports=at.sort((a,b)=>new Date(b.day)-new Date(a.day))

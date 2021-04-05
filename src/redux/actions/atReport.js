@@ -10,7 +10,6 @@ export const getReports=()=>(dispatch,getState)=>{
 
     axios.get(BASE_URL+'/school/api/CommandHistory/',tokenConfig(getState))
     .then(res=>{
-      console.log('at',res.data)
       dispatch({
         type:AT_LOADED,
         payload:res.data

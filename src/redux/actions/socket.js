@@ -16,8 +16,8 @@ export const loginSocket=()=>(dispatch,getState)=>{
 
     dispatch({type:CONNECTING_SOCKET})
 
-    const user=getState().User.user.user
-
+    const user=getState().User.user
+    console.log('socketLogin',getState().User.user)
     socket=io(SOCKET_URL,connectionConfig)
     socket.on('connect',()=>{
         console.log('socket',user)

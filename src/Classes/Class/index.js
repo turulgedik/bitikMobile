@@ -42,6 +42,7 @@ export class _Class extends Component {
     }
 
     componentDidMount(){
+        /*
         (async () => {
             if (Platform.OS !== 'web') {
               const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -50,6 +51,7 @@ export class _Class extends Component {
               }
             }
         })();
+        */
     }
 
     pickImage = async () => {
@@ -84,9 +86,9 @@ export class _Class extends Component {
 
         const {id,classes,students,connecteds,app}=this.props
 
-        const _class=classes.find(c=>c._account.id===id)
-        const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account.id):null
-        console.log("app",students)
+        const _class=classes.find(c=>c._account===id)
+        const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
+        console.log("app",classes)
         return (
             <ScrollView style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
                 {
@@ -226,7 +228,7 @@ export class _Class extends Component {
                         <Text style={{color:'#042C5C',fontSize:20}}>{_class.level + " / "+_class.name}</Text>
                         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                             <Image source={icons.Users} style={{height:20,width:20}} resizeMode='contain'/>
-                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class._account.id===id).length}</Text>
+                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
                         </View>
                     </View>
                     <View style={{...styles.profileButton,backgroundColor:con!==null && con!==undefined?"#2ecc71":"#e74c3c"}}>
@@ -294,6 +296,7 @@ export class _Class extends Component {
                         </TouchableOpacity>
                     </View>
                     {
+                        /*
                         con!==null && con!==undefined?
                         <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={()=>{
@@ -309,8 +312,10 @@ export class _Class extends Component {
                                 </View>
                             </TouchableOpacity>
                         </View>:null
+                        */
                     }
                     {
+                        /*
                         con!==null && con!==undefined?
                         <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={()=>{
@@ -326,6 +331,7 @@ export class _Class extends Component {
                                 </View>
                             </TouchableOpacity>
                         </View>:null
+                        */
                     }
                     {
                         con!==null && con!==undefined?
@@ -362,8 +368,8 @@ export class _Class extends Component {
 
                 <Text style={{fontSize:30,color:'#042C5C', marginBottom:20}}>Raporlar</Text>
                 <FlatList style={{marginBottom:20}} contentContainerStyle={{justifyContent:'center',flexDirection:'row',flexWrap:'wrap'}} data={[
-                    {name:'Yoklama', icon:icons.Check, touch:()=>{Actions.rollCallReport({id:id})}},
-                    {name:'A.T. Kullanımı', icon:icons.Check, touch:()=>{Actions.atReports({id:id})}},
+                    {name:'Yoklama', icon:icons.RollCallReport, touch:()=>{Actions.rollCallReport({id:id})}},
+                    {name:'A.T. Kullanımı', icon:icons.ATReport, touch:()=>{Actions.atReports({id:id})}},
                 ]} renderItem={({item,index})=>{
                     return(
                         <TouchableOpacity style={styles.myApps} onPress={()=>{
