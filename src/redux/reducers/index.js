@@ -5,6 +5,9 @@ import RollCallReducer from './RollCallReducer'
 import SocketReducer from './SocketReducer'
 import AppReducer from './AppReducer'
 import ATReducer from './ATReducer'
+import HomeWorkReducer from './HomeWorkReducer'
+import NotificationReducer from './NotificationReducer'
+
 
 export default combineReducers({
     User:UserReducer,
@@ -12,5 +15,7 @@ export default combineReducers({
     RollCall:RollCallReducer,
     Socket:SocketReducer,
     App:AppReducer,
+    HomeWork:HomeWorkReducer,
+    Notification:NotificationReducer,
     AT:ATReducer
 })

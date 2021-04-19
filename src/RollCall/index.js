@@ -189,7 +189,13 @@ class RollCall extends Component {
                         <View style={{flexDirection:'row',flexWrap:'wrap'}}>
                             {
                                 students.filter(s=>s._class!==null&&s._class===id).map(student=>{
-                                    console.log("image",'"'+BASE_URL+student._account.image+'"')
+                                    var firstNameArray=student._account.first_name.split(' ')
+                                    let first_name=firstNameArray[0]
+                                    if(firstNameArray.length>1){
+                                        const newName=firstNameArray[0].length>firstNameArray[1].length?firstNameArray[0].charAt(0)+'. '+firstNameArray[1]:
+                                            firstNameArray[0]+' '+firstNameArray[1].charAt(0)+'.'
+                                        first_name=newName
+                                    }
                                     const roll=rollcalls.rollcalls.filter(r=>r._student._account.id===student._account.id &&
                                         r.index===(this.state.selectedStudyIndex+1) && r.day===this.state.date).length>0?
                                         rollcalls.rollcalls.find(r=>r._student._account.id===student._account.id):null
@@ -203,8 +209,10 @@ class RollCall extends Component {
                                                     this.remove(roll.id)
                                                 }
                                             }}>
-                                                <Image source={student._account.image===null?icons.User:{uri:BASE_URL+student._account.image}} style={{width:'100%',flex:1,marginBottom:10}} resizeMode='contain'/>
-                                                <Text>{student._account.first_name+" "+student._account.last_name}</Text>
+                                                <Image source={student._account.image===null?icons.User:{uri:BASE_URL+student._account.image}} style={{width:'100%',flex:1}} resizeMode='contain'/>
+                                                <View style={{width:'100%',height:30,justifyContent:'center',alignItems:'center'}}>
+                                                    <Text style={{fontSize:12}}>{first_name+" "+student._account.last_name}</Text>
+                                                </View>
                                             </TouchableOpacity>
                                         </View>
                                     )

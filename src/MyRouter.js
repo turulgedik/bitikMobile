@@ -9,6 +9,7 @@ import _Class from '../src/Classes/Class'
 import RollCall from '../src/RollCall'
 import RollCallReport from './Reports/RollCallReport'
 import ATReports from './ATReports'
+import HomeWork from './HomeWork/'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadUser} from './redux/actions/auth'
@@ -16,6 +17,7 @@ import Splash from './Splash'
 
 import StudentHome from '../src/StudentMode/Home'
 import sRollCallReport from '../src/StudentMode/Reports/RollCallReport'
+import sHomeWork from '../src/StudentMode/HomeWork/index'
 
 
 export class MyRouter extends Component {
@@ -58,6 +60,7 @@ export class MyRouter extends Component {
                         <Stack hideNavBar={true}>
                             <Scene key='studentHome' component={StudentHome} title='studentHome' hideNavBar={true}/>
                             <Scene key='sRollCall' component={sRollCallReport} title='sRollCall' hideNavBar={true}/>
+                            <Scene key='sHomeWork' component={sHomeWork} title='sHomeWork' hideNavBar={true}/>
                         </Stack>:
                     this.props.auth.isAuth?
                         <Stack hideNavBar={true}>
@@ -67,6 +70,7 @@ export class MyRouter extends Component {
                             <Scene key='rollCall' component={RollCall} title='rollcall' hideNavBar={true}/>
                             <Scene key='rollCallReport' component={RollCallReport} title='rollCallReport' hideNavBar={true}/>
                             <Scene key='atReports' component={ATReports} title='atReport' hideNavBar={true}/>
+                            <Scene key='homeWork' component={HomeWork} title='homeWork' hideNavBar={true}/>
                         </Stack>
                     :
                         <Stack hideNavBar={true}>

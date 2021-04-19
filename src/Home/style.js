@@ -1,5 +1,7 @@
 import {StyleSheet, Dimensions} from 'react-native'
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 export const styles=StyleSheet.create({
     background:{
         width:'100%',
@@ -36,5 +38,9 @@ export const styles=StyleSheet.create({
         borderWidth:0.5,
         borderRadius:25,
         margin:5
-    }
+    },
+    showMedia:{
+        width:windowWidth*0.8,
+        maxHeight:windowHeight*.8,
+    },
 })

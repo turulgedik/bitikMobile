@@ -33,6 +33,11 @@ const icons={
     RollCallReport:require('../icons/rollCallReport.png'),
     ATReport:require('../icons/atReport.png'),
     Exit:require('../icons/exit.png'),
+    Teacher:require('../icons/teacher.png'),
+    Okey:require('../icons/okey.png'),
+    Not:require('../icons/not.png'),
+    HomeWork:require('../icons/homework.png'),
+    WasSeen:require('../icons/wasSeen.png'),
 
     TeacherSMS:require('../icons/teacher_sms_bg.png'),
     StudentSMS:require('../icons/student_sms_bg.png'),

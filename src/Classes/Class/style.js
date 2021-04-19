@@ -39,5 +39,15 @@ export const styles=StyleSheet.create({
         width:windowWidth*0.8,
         alignItems:'center',
         justifyContent:'center'
+    },
+    dateTextView:{
+        width:75,
+        height:50,
+        borderColor:'#042C5C',
+        borderWidth:0.5,
+        borderRadius:15,
+        marginRight:10,
+        alignItems:'center',
+        justifyContent:'center'
     }
 })

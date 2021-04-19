@@ -16,9 +16,9 @@ export const styles=StyleSheet.create({
     },
     profileButton:{
         width:50,
-        height:50,
+        height:25,
         borderRadius:10,
-        backgroundColor:'#0078E2',
+        backgroundColor:'#0AD46F',
         alignItems:'center',
         justifyContent:'center'
     },
@@ -26,7 +26,7 @@ export const styles=StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         width:'33.3%',
-        height:170,
+        height:windowWidth/3,
     },
     student:{
         width:'90%',
@@ -65,6 +65,12 @@ export const styles=StyleSheet.create({
         borderWidth:0.5,
         borderRadius:15,
         marginRight:10,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    alert:{
+        width:windowWidth*0.8,
+        maxHeight:windowHeight*0.8,
         alignItems:'center',
         justifyContent:'center'
     }

@@ -11,7 +11,10 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { Video } from 'expo-av';
 import Moment from 'moment'
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+import {addHomeWork,getHomeWorks} from '../../redux/actions/homework'
+import {addNotification} from '../../redux/actions/notifications'
 
 const ImageType=ImagePicker.MediaTypeOptions.Images
 const VideoType=ImagePicker.MediaTypeOptions.Videos
@@ -39,9 +42,13 @@ export class _Class extends Component {
         ],
         answerText:'',
         trueAnswer:false,
+        homeWork:'',
+        notification:'',
+        last_date:Moment(new Date()).format('yyyy-MM-DD'),
     }
 
     componentDidMount(){
+        this.props.getHomeWorks()
         /*
         (async () => {
             if (Platform.OS !== 'web') {
@@ -82,9 +89,59 @@ export class _Class extends Component {
         this._alert.show()
     }
 
+    createHomeWork=()=>{
+
+        const {last_date,homeWork}=this.state
+
+        const data={
+            homeWork:homeWork,
+            last_date:last_date,
+            type:0,
+            _class:this.props.id
+        }
+
+        this.props.addHomeWork(data,(req)=>{
+            if(!req){
+                this.message('Hata!',"Ödev Oluşturulken Hata Oluştu. Boş Alan Bırakmayınız!")
+
+            }else
+            {
+                this._homeWork.onClose()
+                this.setState({homeWork:''})
+            }
+        })
+    }
+
+    createNotify=()=>{
+
+        const {notification}=this.state
+
+        const data={
+            notification:notification,
+            type:0,
+            notiType:0,
+            _class:this.props.id
+        }
+
+        this.props.addNotification(data,(req)=>{
+            if(!req){
+                this._alert.setTitle("Hata!")
+                this._alert.setMessage("Duyuru Oluşturulken Hata Oluştu. Boş Alan Bırakmayınız!")
+                this._alert.setConfirmText('Tamam')
+                this._alert.show()
+            }else
+                {
+                    this._newNotifyAll.onClose()
+                    this.setState({notification:''})
+                }
+        })
+    }
+
     render() {
 
-        const {id,classes,students,connecteds,app}=this.props
+        const {id,classes,students,connecteds,app,homeWork}=this.props
+        const filterHomeWorks=homeWork.filter(h=>h._class._account===id)
+        const sortHomeWorks=filterHomeWorks.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
 
         const _class=classes.find(c=>c._account===id)
         const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
@@ -100,6 +157,26 @@ export class _Class extends Component {
                     </MyModal>
                     :null
                 }
+                <MyModal ref={nodex=>(this._newNotifyAll=nodex)}>
+                    <View style={styles.showMedia}>
+                        <View style={{width:'100%',height:50,justifyContent:'center'}}>
+                            <Text style={{fontSize:20,fontWeight:'bold'}}>Yeni Duyuru</Text>
+                        </View>
+                        <View style={{marginBottom:10,width:'100%',}}>
+                            <Text style={{fontSize:20,marginBottom:10}}>Duyuru Metni</Text>
+                            <TextInput value={this.state.notification} multiline={true} placeholder='Bir Şeyler Yaz..' style={{width:'100%',height:150, borderColor:'#1e1e1e',borderWidth:1}} onChangeText={(text)=>
+                                this.setState({notification:text})
+                            }/>
+                        </View>
+                        
+
+                        <TouchableOpacity style={{width:'100%',height:50,alignItems:'center',justifyContent:'center',backgroundColor:'#2ecc71', }} onPress={()=>{
+                            this.createNotify()
+                        }}>
+                            <Text style={{color:'white'}}>Oluştur</Text>
+                        </TouchableOpacity>
+                    </View>
+                </MyModal>
                 <MyModal ref={node=>(this._showMedia=node)}>
                     {this.state.media!==null?
                         <View>
@@ -217,6 +294,53 @@ export class _Class extends Component {
                         </TouchableOpacity>
                     </View>
                 </MyModal>
+                
+                <MyModal ref={node=>(this._homeWork=node)}>
+                    <View style={styles.showMedia}>
+                        <MyModal ref={node=>(this._datePicker=node)}>
+                            <View style={styles.showMedia}>
+                                <View style={{height:50,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
+                                    <Text style={{fontSize:20,flex:1}}>Tarih Seçin</Text>
+                                </View>
+                                <View style={{width:'100%'}}>
+                                    <DateTimePicker style={{width:'100%',}} value={new Date(this.state.last_date)} mode='date' display='default' locale='tr' onChange={(event,date)=>{
+                                        this.setState({last_date:Moment(date).format('yyyy-MM-DD')})
+                                    }}/>
+                                </View>
+                            </View>
+                        </MyModal>
+                        <View style={{width:'100%'}}>
+                            <Text style={{fontSize:25}}>Yeni Ödev</Text>
+                        </View>
+                        <View style={{width:'100%',marginVertical:10}}>
+                            <Text style={{fontSize:20,marginBottom:10}}>Ödev Metni</Text>
+                            <TextInput value={this.state.homeWork} multiline={true} placeholder='Bir Şeyler Yaz..' style={{width:'100%',height:200, borderColor:'#1e1e1e',borderWidth:1}} onChangeText={(text)=>
+                                this.setState({homeWork:text})
+                            }/>
+                        </View>
+                        <View style={{width:'100%'}}>
+                            <Text style={{fontSize:20,marginBottom:10}}>Bitiş Tarihi</Text>
+                            <TouchableOpacity style={{alignItems:'center',justifyContent:'center', flexDirection:'row', marginBottom:20}} onPress={()=>{
+                                this._datePicker.onShow()
+                            }}>
+                                <View style={styles.dateTextView}>
+                                    <Text>{Moment(this.state.last_date).format('YYYY')}</Text>
+                                </View>
+                                <View style={styles.dateTextView}>
+                                    <Text>{Moment(this.state.last_date).format('MM')}</Text>
+                                </View>
+                                <View style={{...styles.dateTextView,marginRight:0}}>
+                                    <Text>{Moment(this.state.last_date).format('DD')}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={{width:'100%',height:50,alignItems:'center',justifyContent:'center',backgroundColor:'#2ecc71', }} onPress={()=>{
+                            this.createHomeWork()
+                        }}>
+                            <Text style={{color:'white'}}>Oluştur</Text>
+                        </TouchableOpacity>
+                    </View>
+                </MyModal>
                 <Alert ref={node=>(this._alert=node)} />
                 <View style={styles.title}>
                     <TouchableOpacity style={{height:'100%',width:50}} onPress={()=>{
@@ -292,6 +416,30 @@ export class _Class extends Component {
                             </View>
                             <View style={{alignItems:'center',justifyContent:'center',height:50}}>
                                 <Text>Yoklama</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
+                        <TouchableOpacity onPress={()=>{
+                            this._homeWork.onShow()
+                        }}>
+                            <View style={{...styles.actionButtons,backgroundColor:'#ED4C67'}}>
+                                <Image source={icons.HomeWork} style={{width:50,height:50,tintColor:'white'}} resizeMode='contain'/>
+                            </View>
+                            <View style={{alignItems:'center',justifyContent:'center',height:50}}>
+                                <Text>Ödev</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
+                        <TouchableOpacity onPress={()=>{
+                            this._newNotifyAll.onShow()
+                        }}>
+                            <View style={{...styles.actionButtons,backgroundColor:'#ffb142'}}>
+                                <Image source={icons.Notification} style={{width:50,height:50,tintColor:'white'}} resizeMode='contain'/>
+                            </View>
+                            <View style={{alignItems:'center',justifyContent:'center',height:50}}>
+                                <Text>Genel Duyuru</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -387,6 +535,31 @@ export class _Class extends Component {
 
                 </FlatList>
 
+                <Text style={{fontSize:30,color:'#042C5C', marginBottom:20}}>Ödevler</Text>
+                <FlatList style={{marginBottom:20,width:'100%'}}  data={sortHomeWorks} renderItem={({item,index})=>{
+                    return(
+                        <TouchableOpacity style={{width:'100%',borderBottomWidth:5,borderBottomColor:'#34495e'}} onPress={()=>{
+                            Actions.homeWork({id:item.id})
+                        }}>
+                            <View style={{width:'100%',height:100,padding:10,flexDirection:'row',alignItems:'center'}}>
+                                <View style={{height:50,width:50,alignItems:'center',justifyContent:'center',marginRight:5}}>
+                                    <Image source={icons.HomeWork} style={{width:40,height:40}} resizeMode='contain'/>
+                                </View>
+                                <View style={{flex:1}}>
+                                    <Text>{(item.homeWork.length>100)?item.homeWork.substring(0,75)+'...':item.homeWork}</Text>
+                                </View>
+                            </View>
+                            <View style={{width:'100%',padding:10,flexDirection:'row',alignItems:'center'}}>
+                                <Text style={{flex:1.5}}>Bitiş Tarihi : {item.last_date}</Text>
+                                <Text style={{flex:1,textAlign:'center'}}>Yapan : {item.whoDo.length}</Text>
+                                <Text style={{flex:1,textAlign:'center'}}>Gören : {item.wasSeen.length}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    )
+                }}>
+
+                </FlatList>
+
             </ScrollView>
         )
     }
@@ -397,6 +570,7 @@ const mapStateToProps = (state) => ({
     students:state.School.school.students,
     connecteds:state.Socket.connecteds,
     app:state.App,
+    homeWork:state.HomeWork.homeworks,
 })
 
 const mapDispatchToProps = {
@@ -404,7 +578,10 @@ const mapDispatchToProps = {
     unLock,
     sendImage,
     notify,
-    question
+    question,
+    addHomeWork,
+    getHomeWorks,
+    addNotification
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Class)
