@@ -11,7 +11,7 @@ import axios from 'axios'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Alert from '../components/Alert'
 import {Actions} from 'react-native-router-flux'
-import {BASE_URL} from '../redux/actions/host'
+import {BASE_URL,IMAGE_URL} from '../redux/actions/host'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 const windowWidth = Dimensions.get('window').width;
@@ -209,7 +209,7 @@ class RollCall extends Component {
                                                     this.remove(roll.id)
                                                 }
                                             }}>
-                                                <Image source={student._account.image===null?icons.User:{uri:BASE_URL+student._account.image}} style={{width:'100%',flex:1}} resizeMode='contain'/>
+                                                <Image source={student._account.image===null?icons.User:{uri:IMAGE_URL+student._account.image}} style={{width:'100%',flex:1}} resizeMode='contain'/>
                                                 <View style={{width:'100%',height:30,justifyContent:'center',alignItems:'center'}}>
                                                     <Text style={{fontSize:12}}>{first_name+" "+student._account.last_name}</Text>
                                                 </View>
