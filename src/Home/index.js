@@ -127,7 +127,7 @@ class Home extends Component {
                         <Image source={icons.Notification} style={{width:25,height:25, tintColor:'#F39200'}} resizeMode='contain'/>
                     </TouchableOpacity>
                     <View style={{flex:1, alignItems:'center',justifyContent:'center',height:50}}>
-                        <Text style={{fontSize:30, color:'#042C5C'}}>Bi'Tıkla</Text>
+                        <Text style={{fontSize:30, color:'#042C5C'}}>Hadi Okulum</Text>
                     </View>
                     <TouchableOpacity style={[styles.notificationButton,{borderColor:'#e74c3c'}]} onPress={()=>{
                         this._alert.setTitle('Çıkış Yap')
@@ -161,7 +161,6 @@ class Home extends Component {
                 <Text style={{fontSize:30,color:'#77869E', marginBottom:20}}>UYGULAMALARIMIZ</Text>
                 <FlatList style={{marginBottom:20}} contentContainerStyle={{justifyContent:'center',flexDirection:'row',flexWrap:'wrap'}} data={[
                     {name:'Bilgi Yarışması', icon:icons.Logo, url:''},
-                    {name:'Udemy', icon:icons.Logo, url:''},
                 ]} renderItem={({item,index})=>{
                     return(
                         <TouchableOpacity style={styles.myApps}>

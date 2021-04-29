@@ -11,7 +11,7 @@ export default class DropDown extends Component {
         return (
             <View style={styles.background}>
                 <View style={styles.title}>
-                    <Text style={{flex:1,fontSize:'large'}}>{this.props.name}</Text>
+                    <Text style={{flex:1,fontSize:20}}>{this.props.name}</Text>
                     {this.props.children!==undefined?
                      <TouchableOpacity onPress={()=>{
                         const show=!this.state.show
