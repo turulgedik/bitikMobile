@@ -159,6 +159,9 @@ class Home extends Component {
                 </View>
                 
                 <Text style={{fontSize:30,color:'#77869E', marginBottom:20}}>UYGULAMALARIMIZ</Text>
+                {
+                    /*
+                    
                 <FlatList style={{marginBottom:20}} contentContainerStyle={{justifyContent:'center',flexDirection:'row',flexWrap:'wrap'}} data={[
                     {name:'Bilgi Yarışması', icon:icons.Logo, url:''},
                 ]} renderItem={({item,index})=>{
@@ -175,6 +178,8 @@ class Home extends Component {
                 }}>
     
                 </FlatList>
+                */
+                }
 
                {
                    /*
