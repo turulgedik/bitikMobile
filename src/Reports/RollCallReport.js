@@ -73,14 +73,14 @@ class RollCallReport extends Component {
                         <Image source={icons.Back} style={{height:'100%',width:'100%', tintColor:'#0A7ADD'}} resizeMode='contain'/>
                     </TouchableOpacity>
                     <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-                        <Text style={{color:'#042C5C',fontSize:20}}>{_class.level + " / "+_class.name}</Text>
+                        <Text style={{color:'#042C5C',fontSize:25}}>{_class.level + " / "+_class.name}</Text>
                         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                             <Image source={icons.Users} style={{height:20,width:20}} resizeMode='contain'/>
-                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
+                            <Text style={{fontSize:20}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
                         </View>
                     </View>
-                    <View style={{...styles.profileButton,backgroundColor:con!==null && con!==undefined?"#2ecc71":"#e74c3c"}}>
-                        <Text style={{color:'white'}}>{con!==null && con!==undefined?"Açık":"Kapalı"}</Text>
+                    <View style={{...styles.profileButton}}>
+                        
                     </View>
                 </View>
                 <View style={{marginHorizontal:-10,flex:1}}>

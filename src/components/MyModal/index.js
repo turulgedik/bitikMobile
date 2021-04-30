@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {styles} from './style'
-import {View, Text, TouchableOpacity, Modal} from 'react-native'
+import {View, Text, TouchableOpacity, Modal,KeyboardAvoidingView } from 'react-native'
 
 export default class MyModal extends Component {
 
@@ -30,7 +30,7 @@ export default class MyModal extends Component {
 
         return (
             <Modal animationType="slide" transparent={true} visible={this.state.visible}>
-                <View style={styles.background}>
+                <KeyboardAvoidingView style={styles.background} behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
                     <View style={styles.contentView}>
                         {childrenProps}
                     </View>
@@ -43,7 +43,7 @@ export default class MyModal extends Component {
                         </TouchableOpacity>
                         :null
                     }
-                </View>
+                </KeyboardAvoidingView>
             </Modal>
         )
     }

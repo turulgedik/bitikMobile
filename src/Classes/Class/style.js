@@ -13,7 +13,7 @@ export const styles=StyleSheet.create({
         marginBottom:20
     },
     profileButton:{
-        width:50,
+        width:100,
         height:25,
         borderRadius:10,
         backgroundColor:'#0AD46F',

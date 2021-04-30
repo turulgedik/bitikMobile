@@ -17,10 +17,7 @@ export const styles=StyleSheet.create({
     profileButton:{
         width:50,
         height:25,
-        borderRadius:10,
-        backgroundColor:'#0AD46F',
-        alignItems:'center',
-        justifyContent:'center'
+
     },
     studentView:{
         alignItems:'center',

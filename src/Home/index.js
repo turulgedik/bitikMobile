@@ -126,8 +126,8 @@ class Home extends Component {
                     }}>
                         <Image source={icons.Notification} style={{width:25,height:25, tintColor:'#F39200'}} resizeMode='contain'/>
                     </TouchableOpacity>
-                    <View style={{flex:1, alignItems:'center',justifyContent:'center',height:50}}>
-                        <Text style={{fontSize:30, color:'#042C5C'}}>Hadi Okulum</Text>
+                    <View style={{flex:1, alignItems:'center',justifyContent:'center',height:50,}}>
+                        <Image source={icons.Logo2} style={{width:'100%',height:'100%'}} resizeMode='contain'/>
                     </View>
                     <TouchableOpacity style={[styles.notificationButton,{borderColor:'#e74c3c'}]} onPress={()=>{
                         this._alert.setTitle('Çıkış Yap')
@@ -148,20 +148,17 @@ class Home extends Component {
                     */}
                 </View>
                 <View style={{alignItems:'center',justifyContent:'center',marginBottom:20}}>
-                    <Text style={{fontSize:30,color:'#F39200'}}>Akıllı Tahta Yönetimi</Text>
+                    <Text style={{fontSize:30,color:'#042C5C'}}>Sınıf Seç</Text>
                 </View>
-                <View style={{marginBottom:20}}>
-                    <Text style={{fontSize:30,color:'#77869E'}}>İşlem Yapacağınız</Text>
-                    <Text style={{fontSize:30,color:'#042C5C'}}>Sınıf Seçin</Text>
-                </View>
+
                 <View style={{marginBottom:20,flexDirection:'row',flexWrap:'wrap'}}>
                     {navigatorView}
                 </View>
                 
-                <Text style={{fontSize:30,color:'#77869E', marginBottom:20}}>UYGULAMALARIMIZ</Text>
+                <Text style={{fontSize:20,color:'#042C5C', marginBottom:20}}>DİĞER UYGULAMALARIMIZ</Text>    
                 {
                     /*
-                    
+                
                 <FlatList style={{marginBottom:20}} contentContainerStyle={{justifyContent:'center',flexDirection:'row',flexWrap:'wrap'}} data={[
                     {name:'Bilgi Yarışması', icon:icons.Logo, url:''},
                 ]} renderItem={({item,index})=>{

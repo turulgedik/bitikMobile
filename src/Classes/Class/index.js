@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {View,Text,TouchableOpacity,Image, ScrollView,FlatList, TextInput, Switch} from 'react-native'
+import {View,Text,TouchableOpacity,Image, ScrollView,FlatList, TextInput, Switch,KeyboardAvoidingView} from 'react-native'
 import {styles,windowWidth} from './style'
 import icons from '../../Icons'
 import { Actions } from 'react-native-router-flux'
@@ -348,19 +348,17 @@ export class _Class extends Component {
                     }}>
                         <Image source={icons.Back} style={{height:'100%',width:'100%', tintColor:'#0A7ADD'}} resizeMode='contain'/>
                     </TouchableOpacity>
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-                        <Text style={{color:'#042C5C',fontSize:20}}>{_class.level + " / "+_class.name}</Text>
+                    <View style={{flex:1,marginRight:-50,alignItems:'center',justifyContent:'center'}}>
+                        <Text style={{color:'#042C5C',fontSize:25}}>{_class.level + " / "+_class.name}</Text>
                         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                             <Image source={icons.Users} style={{height:20,width:20}} resizeMode='contain'/>
-                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
+                            <Text style={{fontSize:20}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
                         </View>
                     </View>
                     <View style={{...styles.profileButton,backgroundColor:con!==null && con!==undefined?"#2ecc71":"#e74c3c"}}>
-                        <Text style={{color:'white'}}>{con!==null && con!==undefined?"Açık":"Kapalı"}</Text>
+                        <Text style={{color:'white'}}>Tahta {con!==null && con!==undefined?"Açık":"Kapalı"}</Text>
                     </View>
                 </View>
-
-                <Text style={{fontSize:30,color:'#042C5C',marginBottom:20}}>Genel</Text>
 
                 <View style={{marginBottom:20,flexDirection:'row',flexWrap:'wrap'}}>
                     {

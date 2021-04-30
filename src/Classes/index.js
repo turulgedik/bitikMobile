@@ -57,9 +57,8 @@ export class Classes extends Component {
                     }
                     
                 </View>
-                <View style={{marginBottom:20}}>
-                    <Text style={{fontSize:30,color:'#77869E'}}>İşlem Yapacağınız</Text>
-                    <Text style={{fontSize:30,color:'#042C5C'}}>Sınıf Seçin</Text>
+                <View style={{marginBottom:20,alignItems:'center',justifyContent:'center'}}>
+                    <Text style={{fontSize:30,color:'#042C5C'}}>Şube Seç</Text>
                 </View>
 
                 <View style={{marginBottom:20,flexDirection:'row',flexWrap:'wrap'}}>

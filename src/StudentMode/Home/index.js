@@ -167,26 +167,28 @@ class StudentHome extends Component {
                     </TouchableOpacity>
                 </View>
                 
-                <Text style={{fontSize:30,color:'#77869E', marginBottom:20}}>HADİ DÜNYASINA KATIL</Text>
-                <FlatList style={{marginBottom:20}} contentContainerStyle={{justifyContent:'center',flexDirection:'row',flexWrap:'wrap'}} data={[
-                    {name:'Kanka', icon:icons.Logo, url:''},
-                    {name:'Eğitim', icon:icons.Logo, url:''},
-                    {name:'Mesaj', icon:icons.Logo, url:''},
-                    {name:'Cevapla', icon:icons.Logo, url:''},
-                ]} renderItem={({item,index})=>{
-                    return(
-                        <TouchableOpacity style={styles.myApps}>
-                            <View style={{flex:1, justifyContent:'center',paddingHorizontal:10}}>
-                                <Image source={item.icon} style={{width:'100%',height:'100%'}} resizeMode='contain'/>
-                            </View>
-                            <View style={{flex:0.5,alignItems:'center',justifyContent:'center'}}>
-                                <Text style={{color:'#0078E2'}}>{item.name}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )
-                }}>
+                {/*
+                    <Text style={{fontSize:30,color:'#77869E', marginBottom:20}}>HADİ DÜNYASINA KATIL</Text>
+                    <FlatList style={{marginBottom:20}} contentContainerStyle={{justifyContent:'center',flexDirection:'row',flexWrap:'wrap'}} data={[
+                        {name:'Kanka', icon:icons.Logo, url:''},
+                        {name:'Eğitim', icon:icons.Logo, url:''},
+                        {name:'Mesaj', icon:icons.Logo, url:''},
+                        {name:'Cevapla', icon:icons.Logo, url:''},
+                    ]} renderItem={({item,index})=>{
+                        return(
+                            <TouchableOpacity style={styles.myApps}>
+                                <View style={{flex:1, justifyContent:'center',paddingHorizontal:10}}>
+                                    <Image source={item.icon} style={{width:'100%',height:'100%'}} resizeMode='contain'/>
+                                </View>
+                                <View style={{flex:0.5,alignItems:'center',justifyContent:'center'}}>
+                                    <Text style={{color:'#0078E2'}}>{item.name}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }}>
 
-                </FlatList>
+                    </FlatList>
+                */}
 
                 <StatusBar hidden={true}/>
             </ScrollView>

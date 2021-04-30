@@ -1,5 +1,6 @@
 const icons={
     Logo:require('../icons/Logo.png'),
+    Logo2:require('../icons/Logo2.png'),
     User:require('../icons/login_user.png'),
     Password:require('../icons/login_password.png'),
     Email:require('../icons/login_email.png'),
