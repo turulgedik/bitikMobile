@@ -185,7 +185,7 @@ class RollCall extends Component {
                 </View>
                 <ScrollView style={{marginHorizontal:-10,flex:1}}>
                     <View style={{width:'100%',padding:10}}>
-                        <Text style={{color:'#042C5C', fontSize:20, marginBottom:20}}>{_class.level+" / "+_class.name + " Yoklama Listesi"}</Text>
+                        <Text style={{color:'#042C5C', fontSize:20, marginBottom:20}}>{_class.other+" / "+_class.name + " Yoklama Listesi"}</Text>
                         <View style={{flexDirection:'row',flexWrap:'wrap'}}>
                             {
                                 students.filter(s=>s._class!==null&&s._class===id).map(student=>{

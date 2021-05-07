@@ -22,7 +22,7 @@ export const styles=StyleSheet.create({
     },
     groupItem:{
         width:(windowWidth-40)/2,
-        height:(windowWidth-40)/3,
+        height:150,
         borderWidth:0.5,
         borderColor:'#1e1e1e',
         borderRadius:25,

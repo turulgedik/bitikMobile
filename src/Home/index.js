@@ -54,20 +54,25 @@ class Home extends Component {
     render() {
         const {classes,students,notifications}=this.props
         const sortNotify=notifications.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
-        const group=_.groupBy(classes,'level')
+        const group=_.groupBy(classes,'other')
         const navigatorView=_.map(group,(elem,i)=>{
-            const level=elem[0].level
+            const level=elem[0].other
+            let count=0
+            elem.map(item=>{
+                const studentCount=students.filter(s=>s._class===item._account).length
+                count+=studentCount
+            })
             return(
                 <TouchableOpacity style={styles.groupItem} onPress={()=>{
                     Actions.classes({level:level})
                 }}>
                     <View style={{flex:1, justifyContent:'center',paddingHorizontal:10}}>
-                        <Text style={{color:'white', fontSize:20}}>{level}. Sınıflar</Text>
-                        <Text style={{color:'#80BBF0', fontSize:10}}>Sınıf Sayısı : {classes.filter(c=>c.level===level).length}</Text>
+                        <Text style={{color:'white', fontSize:20}}>{level}</Text>
+                        <Text style={{color:'#80BBF0', fontSize:10}}>Sınıf Sayısı : {classes.filter(c=>c.other===level).length}</Text>
                     </View>
                     <View style={{paddingVertical:10, borderRadius:25, backgroundColor:'#489EEA', flexDirection:'row', alignItems:'center'}}>
                         <Text style={{marginLeft:10, flex:1, color:'white'}}>Öğrenci Sayısı</Text>
-                        <Avatar.Text label={students.filter(s=>s.level===level).length} size={40} style={{marginRight:10,backgroundColor:'#8CC2F2'}} color='white'/>
+                        <Avatar.Text label={count} size={40} style={{marginRight:10,backgroundColor:'#8CC2F2'}} color='white'/>
                     </View>
                 </TouchableOpacity>
             )

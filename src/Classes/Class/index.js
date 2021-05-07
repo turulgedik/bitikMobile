@@ -349,7 +349,7 @@ export class _Class extends Component {
                         <Image source={icons.Back} style={{height:'100%',width:'100%', tintColor:'#0A7ADD'}} resizeMode='contain'/>
                     </TouchableOpacity>
                     <View style={{flex:1,marginRight:-50,alignItems:'center',justifyContent:'center'}}>
-                        <Text style={{color:'#042C5C',fontSize:25}}>{_class.level + " / "+_class.name}</Text>
+                        <Text style={{color:'#042C5C',fontSize:25}}>{_class.other + " / "+_class.name}</Text>
                         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                             <Image source={icons.Users} style={{height:20,width:20}} resizeMode='contain'/>
                             <Text style={{fontSize:20}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
