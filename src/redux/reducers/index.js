@@ -7,6 +7,7 @@ import AppReducer from './AppReducer'
 import ATReducer from './ATReducer'
 import HomeWorkReducer from './HomeWorkReducer'
 import NotificationReducer from './NotificationReducer'
+import CourseReducer from './CourseReducer'
 
 
 export default combineReducers({
@@ -17,5 +18,6 @@ export default combineReducers({
     App:AppReducer,
     HomeWork:HomeWorkReducer,
     Notification:NotificationReducer,
-    AT:ATReducer
+    AT:ATReducer,
+    Course:CourseReducer
 })

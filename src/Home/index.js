@@ -11,6 +11,7 @@ import {Actions} from 'react-native-router-flux'
 import {loginSocket} from '../redux/actions/socket'
 import {getReports} from '../redux/actions/atReport'
 import {getNotifications,addNotification} from '../redux/actions/notifications'
+import {getCourses} from '../redux/actions/course'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import Alert from '../components/Alert'
 import {logOut} from '../redux/actions/auth'
@@ -26,6 +27,7 @@ class Home extends Component {
         props.loginSocket()
         props.getReports()
         props.getNotifications()
+        props.getCourses()
 
     }
     message=(title,message)=>{
@@ -52,7 +54,7 @@ class Home extends Component {
     }
 
     render() {
-        const {classes,students,notifications}=this.props
+        const {classes,students,notifications,courses}=this.props
         const sortNotify=notifications.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
         const group=_.groupBy(classes,'other')
         const navigatorView=_.map(group,(elem,i)=>{
@@ -159,7 +161,32 @@ class Home extends Component {
                 <View style={{marginBottom:20,flexDirection:'row',flexWrap:'wrap'}}>
                     {navigatorView}
                 </View>
-                
+                {
+                    courses.length>0?
+                    <View>
+                        <Text style={{fontSize:20,color:'#042C5C', marginBottom:20}}>KURSLARINIZ</Text>
+                        <View style={{marginBottom:20,flexDirection:'row',flexWrap:'wrap'}}>
+                            {
+                                courses.map((item,i)=>{
+                                    return(
+                                        <TouchableOpacity style={styles.groupItem} onPress={()=>{
+                                            Actions.course({id:item.id})
+                                        }}>
+                                            <View style={{flex:1, justifyContent:'center',paddingHorizontal:10}}>
+                                                <Text style={{color:'white', fontSize:20}}>{item.name}</Text>
+                                                <Text style={{color:'#80BBF0', fontSize:15}}>{item.level}</Text>
+                                            </View>
+                                            <View style={{paddingVertical:10, borderRadius:25, backgroundColor:'#489EEA', flexDirection:'row', alignItems:'center'}}>
+                                                <Text style={{marginLeft:10, flex:1, color:'white'}}>Öğrenci Sayısı</Text>
+                                                <Avatar.Text label={item._students.length} size={40} style={{marginRight:10,backgroundColor:'#8CC2F2'}} color='white'/>
+                                            </View>
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
+                        </View>
+                    </View>:null
+                }
                 <Text style={{fontSize:20,color:'#042C5C', marginBottom:20}}>DİĞER UYGULAMALARIMIZ</Text>    
                 {
                     /*
@@ -202,7 +229,7 @@ const mapStateToProps = (state) => ({
     user:state.User.auth,
     userID:state.User.user.id,
     notifications:state.Notification.notifications,
-
+    courses:state.Course.courses,
 })
 
 const mapDispatchToProps = {
@@ -211,7 +238,8 @@ const mapDispatchToProps = {
     getReports,
     logOut,
     getNotifications,
-    addNotification
+    addNotification,
+    getCourses
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

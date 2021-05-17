@@ -9,10 +9,10 @@ export const styles=StyleSheet.create({
     topView:{
         flex:2,
         alignItems:'center',
-        justifyContent:'flex-end'
+        justifyContent:'flex-end',
     },
     centerView:{
-        flex:2,
+        flex:2.5,
         alignItems:'center',
         justifyContent:'center',
     },

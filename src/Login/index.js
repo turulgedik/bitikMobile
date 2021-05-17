@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {View,Text,TouchableOpacity,Image,KeyboardAvoidingView,Platform} from 'react-native'
+import {View,Text,TouchableOpacity,Image,KeyboardAvoidingView,Platform, ScrollView} from 'react-native'
 import {styles} from './style'
 import { StatusBar } from 'expo-status-bar';
 import icons from '../Icons'
@@ -34,9 +34,9 @@ class Login extends Component {
         console.log('user',this.props.user)
         return (
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} style={styles.background}>
-                
+                <ScrollView contentContainerStyle={{flex:1}}>
                 <View style={styles.topView}>
-                    <View style={{width:'80%',height:'50%',borderWidth:5,borderColor:'#34495e',backgroundColor:'white'}}>
+                    <View style={{width:'80%',height:'70%',borderWidth:5,borderColor:'#34495e',backgroundColor:'white'}}>
                         <Image source={icons.Logo} style={{width:'100%',height:'100%'}} resizeMode='contain'/>
                     </View>
                 </View>
@@ -60,7 +60,7 @@ class Login extends Component {
                                 <Image source={icons.Eye} style={{marginHorizontal:5,width:22,height:22, }} resizeMode='contain' />
                             </TouchableOpacity>
 
-                            } settings={{value:this.state.password, placeholder:'Şifre', secureTextEntry:this.state.eye, onChangeText:(text)=>{
+                            } settings={{keyboardType:'number-pad',value:this.state.password, placeholder:'Şifre', secureTextEntry:this.state.eye, onChangeText:(text)=>{
                             this.setState({password:text})
                         }}}/>
                     </View>
@@ -81,6 +81,7 @@ class Login extends Component {
                 </View>
 
                 <StatusBar hidden={true}/>
+                </ScrollView>
             </KeyboardAvoidingView>
         )
     }

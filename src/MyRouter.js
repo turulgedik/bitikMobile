@@ -10,6 +10,9 @@ import RollCall from '../src/RollCall'
 import RollCallReport from './Reports/RollCallReport'
 import ATReports from './ATReports'
 import HomeWork from './HomeWork/'
+import Course from './Course'
+import CourseRollCall from './Course/RollCall'
+import CourseHomeWork from './Course/HomeWork'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadUser} from './redux/actions/auth'
@@ -18,6 +21,8 @@ import Splash from './Splash'
 import StudentHome from '../src/StudentMode/Home'
 import sRollCallReport from '../src/StudentMode/Reports/RollCallReport'
 import sHomeWork from '../src/StudentMode/HomeWork/index'
+import sCourse from '../src/StudentMode/Course/index'
+import sCourseRollCall from '../src/StudentMode/Course/RollCall/index'
 
 
 export class MyRouter extends Component {
@@ -61,6 +66,8 @@ export class MyRouter extends Component {
                             <Scene key='studentHome' component={StudentHome} title='studentHome' hideNavBar={true}/>
                             <Scene key='sRollCall' component={sRollCallReport} title='sRollCall' hideNavBar={true}/>
                             <Scene key='sHomeWork' component={sHomeWork} title='sHomeWork' hideNavBar={true}/>
+                            <Scene key='sCourse' component={sCourse} title='sCourse' hideNavBar={true}/>
+                            <Scene key='sCourseRollCall' component={sCourseRollCall} title='sCourseRollCall' hideNavBar={true}/>
                         </Stack>:
                     this.props.auth.isAuth?
                         <Stack hideNavBar={true}>
@@ -71,6 +78,9 @@ export class MyRouter extends Component {
                             <Scene key='rollCallReport' component={RollCallReport} title='rollCallReport' hideNavBar={true}/>
                             <Scene key='atReports' component={ATReports} title='atReport' hideNavBar={true}/>
                             <Scene key='homeWork' component={HomeWork} title='homeWork' hideNavBar={true}/>
+                            <Scene key='course' component={Course} title='course' hideNavBar={true}/>
+                            <Scene key='courseRollCall' component={CourseRollCall} title='courseRollCall' hideNavBar={true}/>
+                            <Scene key='courseHomeWork' component={CourseHomeWork} title='courseHomeWork' hideNavBar={true}/>
                         </Stack>
                     :
                         <Stack hideNavBar={true}>

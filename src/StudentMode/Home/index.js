@@ -10,6 +10,7 @@ import _ from 'lodash'
 import {Actions} from 'react-native-router-flux'
 import {loginSocket} from '../../redux/actions/socket'
 import {getReports} from '../../redux/actions/atReport'
+import {getCourses} from '../../redux/actions/course'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import Alert from '../../components/Alert'
 import {logOut} from '../../redux/actions/auth'
@@ -29,6 +30,7 @@ class StudentHome extends Component {
         props.getReports()
         props.getRollCalls(props.user.id)
         props.getNotifications()
+        props.getCourses()
 
     }
     message=(title,message)=>{
@@ -55,11 +57,10 @@ class StudentHome extends Component {
     }
 
     render() {
-        const {classes,students,user,rollcalls,notifications}=this.props
+        const {classes,students,user,rollcalls,notifications,courses}=this.props
         const student=students!==undefined || students!==null && user!==undefined || user!==null?students.find(s=>s._account.id===user.id):null
         const _class=classes.find(c=>c._account===student._class)
         const sortNotify=notifications.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
-
         return (
             <ScrollView style={{padding:10,marginTop:ifIphoneX(20,0)}}>
                 <Alert ref={node=>(this._alert=node)} />
@@ -139,7 +140,7 @@ class StudentHome extends Component {
                     <Text style={{fontSize:30,color:'#F39200'}}>{this.props.school.name}</Text>
                 </View>
                 <View style={{marginBottom:20,alignItems:'center',justifyContent:'center'}}>
-                    <Text style={{fontSize:30,color:'#77869E'}}>{student!==null && student!==undefined?_class.level+' - '+_class.name +' Sınıfı '+
+                    <Text style={{fontSize:30,color:'#77869E'}}>{student!==null && student!==undefined?_class.other+' - '+_class.name +' Sınıfı '+
                     student.number + ' Numaralı':''}</Text>
                     <Text style={{fontSize:30,color:'#042C5C'}}>{user.first_name + " "+user.last_name}</Text>
                 </View>
@@ -166,7 +167,28 @@ class StudentHome extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
-                
+                <Text style={{fontSize:30,color:'#77869E', marginBottom:20}}>KURSLAR</Text>
+                {   courses!==undefined?
+                    <FlatList style={{marginBottom:20}} contentContainerStyle={{flexDirection:'row',flexWrap:'wrap'}} data={courses} renderItem={({item,index})=>{
+                        return(
+                            <TouchableOpacity style={styles.groupItem} onPress={()=>{
+                                Actions.sCourse({id:item.id})
+                            }}>
+                                <View style={{flex:1, justifyContent:'center',paddingHorizontal:10}}>
+                                    <Text style={{color:'white', fontSize:20}}>{item.name}</Text>
+                                    <Text style={{color:'#80BBF0', fontSize:15}}>{item.level}</Text>
+                                </View>
+                                <View style={{paddingVertical:10, borderRadius:25, backgroundColor:'#489EEA', flexDirection:'row', alignItems:'center'}}>
+                                    <Text style={{marginLeft:10, flex:1, color:'white'}}>Öğrenci Sayısı</Text>
+                                    <Avatar.Text label={item._students.length} size={40} style={{marginRight:10,backgroundColor:'#8CC2F2'}} color='white'/>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }}>
+
+                    </FlatList>:
+                    <Text>Boş</Text>
+                }
                 {/*
                     <Text style={{fontSize:30,color:'#77869E', marginBottom:20}}>HADİ DÜNYASINA KATIL</Text>
                     <FlatList style={{marginBottom:20}} contentContainerStyle={{justifyContent:'center',flexDirection:'row',flexWrap:'wrap'}} data={[
@@ -204,6 +226,8 @@ const mapStateToProps = (state) => ({
     user:state.User.user,
     rollcalls:state.RollCall,
     notifications:state.Notification.notifications,
+    courses:state.Course.courses,
+
 })
 
 const mapDispatchToProps = {
@@ -213,7 +237,8 @@ const mapDispatchToProps = {
     getRollCalls,
     logOut,
     getNotifications,
-    addNotification
+    addNotification,
+    getCourses
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentHome)
