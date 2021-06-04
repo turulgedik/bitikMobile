@@ -1,0 +1,50 @@
+import {StyleSheet} from 'react-native'
+
+export const styles=StyleSheet.create({
+    background:{
+        width:'100%',
+        height:'100%',
+        backgroundColor:'#0047CC'
+    },
+    topView:{
+        flex:2,
+        alignItems:'center',
+        justifyContent:'flex-end',
+    },
+    centerView:{
+        flex:2.5,
+        alignItems:'center',
+        justifyContent:'center',
+    },
+    bottomView:{
+        flex:1,
+        alignItems:'center',
+    },
+    loginButton:{
+        width:'100%',
+        height:50,
+        borderRadius:25,
+        borderWidth:2,
+        borderColor:'#e1e1e1',
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor:'#F39200'
+    },
+
+    textInput:{
+        width:'100%',
+        height:50,
+        borderWidth:2,
+        borderColor:'#1e1e1e',
+        backgroundColor:'rgba(255,255,255,0.5)',
+        borderRadius:25,
+    },
+    textInputSelected:{
+        width:'100%',
+        height:50,
+        borderWidth:2,
+        borderColor:'#1e1e1e',
+        backgroundColor:'rgba(255,255,255,0.5)',
+        borderRadius:25,
+    },
+})

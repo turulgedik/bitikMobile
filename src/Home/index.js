@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import {getSchool} from '../redux/actions/school'
 import _ from 'lodash'
 import {Actions} from 'react-native-router-flux'
+import {updateToken} from '../redux/actions/school'
 import {loginSocket} from '../redux/actions/socket'
 import {getReports} from '../redux/actions/atReport'
 import {getNotifications,addNotification} from '../redux/actions/notifications'
@@ -17,9 +18,51 @@ import Alert from '../components/Alert'
 import {logOut} from '../redux/actions/auth'
 import MyModal from '../components/MyModal'
 import Moment from 'moment'
+import * as Permissions from 'expo-permissions'
+import * as Notifications from 'expo-notifications'
+import Constants from 'expo-constants'
 
 LogBox.ignoreAllLogs(true)
 class Home extends Component {
+
+    registerForPushNotificationsAsync = async () => {
+        let token='boş'
+        if (Constants.isDevice) {
+          const { status: existingStatus } = await Notifications.getPermissionsAsync();
+          let finalStatus = existingStatus;
+          if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+          }
+          if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+          }
+          token = (await Notifications.getExpoPushTokenAsync()).data;
+          console.log('s',token);
+          this.setState({ expoPushToken: token });
+        } else {
+          alert('Must use physical device for Push Notifications');
+        }
+      
+        if (Platform.OS === 'android') {
+          Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+          });
+        }
+
+        return token
+    };
+
+    async componentDidMount() {
+        const token = await this.registerForPushNotificationsAsync();
+        this.props.updateToken(token,(state)=>{
+            
+        })
+    }
 
     constructor(props){
         super(props)
@@ -57,6 +100,7 @@ class Home extends Component {
         const {classes,students,notifications,courses}=this.props
         const sortNotify=notifications.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
         const group=_.groupBy(classes,'other')
+        console.log('user',this.props.userID)
         const navigatorView=_.map(group,(elem,i)=>{
             const level=elem[0].other
             let count=0
@@ -239,7 +283,8 @@ const mapDispatchToProps = {
     logOut,
     getNotifications,
     addNotification,
-    getCourses
+    getCourses,
+    updateToken
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

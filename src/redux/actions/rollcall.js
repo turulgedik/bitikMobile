@@ -53,3 +53,18 @@ export const removeRollCall=(id,request=func())=>(dispatch,getState)=>{
       request(err)
     })
   }
+
+  export const saveRollCall=(data,request=func())=>(dispatch,getState)=>{
+
+    axios.post(BASE_URL+'/school/api/RollCall/',data,tokenConfig(getState))
+    .then(res=>{
+      dispatch({
+        type:ADD_ROLLCALL,
+        payload:res.data
+      })
+      request(res.data)
+    })
+    .catch(err=>{
+      request(false)
+    })
+  }

@@ -37,6 +37,19 @@ export const createClass=(account,_class,request=func())=>(dispatch,getState)=>{
   })
 }
 
+export const updateToken=(token,request=func())=>(dispatch,getState)=>{
+  const body=JSON.stringify({token:token})
+
+  axios.post(BASE_URL+'/school/api/PushToken/',body,tokenConfig(getState))
+  .then(res=>{
+    request(true)
+  })
+  .catch(err=>{
+    console.log('err',err)
+    request(false)
+  })
+}
+
 export const tokenConfig=getState=>{
   const token=getState().User.auth.token
   const config={

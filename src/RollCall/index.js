@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {View,Text,TouchableOpacity,Image, ScrollView,FlatList, TextInput,Dimensions} from 'react-native'
 import {styles} from './style'
 import icons from '../Icons'
-import {getRollCalls,removeRollCall,addRollCall} from '../redux/actions/rollcall'
+import {getRollCalls,removeRollCall,addRollCall,saveRollCall} from '../redux/actions/rollcall'
 import Tabs from '../components/Tabs'
 import Moment from 'moment'
 import MyModal from '../components/MyModal'
@@ -33,15 +33,90 @@ class RollCall extends Component {
             selectedStudyIndex:-1,
             year:'',
             month:'',
-            day:''
+            day:'',
+            saving:false,
+            _students:[],
         }
     }
 
     componentDidMount(){
         this.props.getRollCalls()
     }
+    componentDidUpdate(prevProps,prevState){
+        if(prevState.selectedTimeTable!==this.state.selectedTimeTable){
+            let currentRollCall=this.props.rollcalls.rollcalls.find(r=>(r._class._account===this.props.id && r.day===this.state.date) && (r._timeTable.id===this.state.selectedTimeTable.id && r.index===this.state.selectedStudyIndex))
+            console.log(currentRollCall)
+            this.setState({_students:currentRollCall!==undefined?currentRollCall._students:[],currentRoll:currentRollCall})
+        }
+    }
+
+    saveRollCall=()=>{
+        if(this.state.selectedTimeTable===null || this.state.selectedStudyIndex===-1){
+            this._alert.setTitle('Hata!')
+            this._alert.setMessage('Yoklama İçin Ders Seçmeniz Gerekmektedir.')
+            this._alert.setConfirmText('Tamam')
+            this._alert.show()
+
+            return
+        }
+
+        this.setState({saving:true})
+
+        let studentID=[]
 
 
+        this.state._students.map(item=>{
+            studentID.push(item._account.id)
+            if(this.state.currentRoll!==undefined){
+                if(this.state.currentRoll._students.findIndex(s=>s._account.id===item._account.id)<0)
+                    this.sendPushNotification(item)
+            }else{
+                this.sendPushNotification(item)
+            }
+        })
+
+        const data={
+            class:this.props.id,
+            timeTable:this.state.selectedTimeTable.id,
+            day:this.state.date,
+            index:this.state.selectedStudyIndex,
+            students:studentID
+        }
+        this.props.saveRollCall(data,(req)=>{
+
+            this.setState({saving:false})
+        })
+    }
+
+
+
+    sendPushNotification = (_student) => {
+        console.log('token',_student._account.push_token)
+        const message=_student.number+" Numaralı ("+_student._account.first_name+" "+_student._account.last_name+") öğrencimiz "+
+                    this.state.date+" tarihinde "+this.state.selectedTimeTable.study.name+" dersine katılmamıştır.\r\n www.akillitahtayonetimi.com"
+
+        const config={
+            headers:{
+              'Content-Type':'application/json'
+            }
+          }
+        
+        axios.post('https://exp.host/--/api/v2/push/send',{
+            to: _student._account.push_token,
+            sound: 'default',
+            title: 'Hadi Okulum',
+            body: message,
+            data: { someData: 'goes here' },
+        },config)
+        .then(res=>{
+            console.log("respons",res.data)
+        })
+
+        
+
+      };
+
+      /*
     add=(id)=>{
 
         if(this.state.selectedTimeTable===null || this.state.selectedStudyIndex===-1){
@@ -70,6 +145,14 @@ class RollCall extends Component {
             console.log(req)
         })
     }
+    */
+
+    addStudent=(student)=>{
+        this.setState({_students:[...this.state._students,student]})
+    }
+    removeStudent=(student)=>{
+        this.setState({_students:[...this.state._students.filter(s=>s._account.id!==student._account.id)]})
+    }
 
     onChangeIndex=(index)=>{
         const _class=this.props.classes.find(c=>c._account===this.props.id)
@@ -78,9 +161,9 @@ class RollCall extends Component {
 
     render() {
         const {id,classes,students,rollcalls}=this.props
+        const {_students,saving}=this.state
         const _class=classes.find(c=>c._account===id)
         var nowDate=new Date(this.state.date)
-        console.log('_class',_class)
         /*
         const groups=_class.groups.map((elem,i)=>{
             return(
@@ -118,6 +201,15 @@ class RollCall extends Component {
         */
         return (
             <View style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
+                {
+                    saving?
+                    <MyModal show={true} closeButton={false}>
+                        <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+                            <Text>Lütfen Bekleyiniz...</Text>
+                        </View>
+                    </MyModal>
+                    :null
+                }
                 <MyModal ref={node=>(this._myModal=node)}>
                     <View style={styles.modal}>
                         <MyModal ref={node=>(this._datePicker=node)}>
@@ -196,22 +288,20 @@ class RollCall extends Component {
                                             firstNameArray[0]+' '+firstNameArray[1].charAt(0)+'.'
                                         first_name=newName
                                     }
-                                    const roll=rollcalls.rollcalls.filter(r=>r._student._account.id===student._account.id &&
-                                        r.index===(this.state.selectedStudyIndex+1) && r.day===this.state.date).length>0?
-                                        rollcalls.rollcalls.find(r=>r._student._account.id===student._account.id):null
+                                    const roll=_students.findIndex(s=>s._account.id===student._account.id)>-1?true:false
                                     return (
                                         <View style={styles.studentView}>
-                                            <TouchableOpacity style={{...styles.student,backgroundColor:roll!==null?'#e74c3c':'white', }} onPress={()=>{
-                                                if(roll===null){
+                                            <TouchableOpacity style={{...styles.student,backgroundColor:roll!==false?'#e74c3c':'white', }} onPress={()=>{
+                                                if(!roll){
                                                     
-                                                    this.add(student._account.id)
+                                                    this.addStudent(student)
                                                 }else{
-                                                    this.remove(roll.id)
+                                                    this.removeStudent(student)
                                                 }
                                             }}>
                                                 <Image source={student._account.image===null?icons.User:{uri:IMAGE_URL+student._account.image}} style={{width:'100%',flex:1}} resizeMode='contain'/>
-                                                <View style={{width:'100%',height:30,justifyContent:'center',alignItems:'center'}}>
-                                                    <Text style={{fontSize:12}}>{first_name+" "+student._account.last_name}</Text>
+                                                <View style={{width:'100%',height:60,justifyContent:'center',alignItems:'center'}}>
+                                                    <Text style={{fontSize:12,textAlign:'center'}}>{first_name+" "+student._account.last_name+'\r\n('+student.number+')'}</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </View>
@@ -221,10 +311,18 @@ class RollCall extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                <View style={{marginHorizontal:-10,padding:10, borderTopColor:'#1e1e1e',borderTopWidth:0.5}}>
-                    <Text>Toplam Gelmeyen Sayısı : {rollcalls.rollcalls.filter(r=>r._student._class===id &&
-                                        r.index===(this.state.selectedStudyIndex+1) && r.day===this.state.date).length}</Text>
-                    <Text>Sınıf Mevcudu : {students.filter(s=>s._class!==null&&s._class===id).length}</Text>
+                <View style={{height:50,flexDirection:'row',alignItems:'center',borderTopColor:'#1e1e1e',borderTopWidth:0.5,marginHorizontal:-10,}}>
+                    <View>
+                        <Text>Toplam Gelmeyen Sayısı : {this.state._students.length}</Text>
+                        <Text>Sınıf Mevcudu : {students.filter(s=>s._class!==null&&s._class===id).length}</Text>
+                    </View>
+                    <View style={{flex:1,alignItems:'flex-end'}}>
+                        <TouchableOpacity style={{width:100,height:50,backgroundColor:'#2ecc71', alignItems:'center',justifyContent:'center'}} onPress={()=>{
+                            this.saveRollCall()
+                        }}>
+                            <Text style={{color:'white'}}>{this.state._students.length===0?'Sınıf Tam':'Kaydet'}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         )
@@ -240,7 +338,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     getRollCalls,
     addRollCall,
-    removeRollCall
+    removeRollCall,
+    saveRollCall
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RollCall)

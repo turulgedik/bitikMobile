@@ -6,6 +6,17 @@ const initialState={
     loaded:false,
 }
 
+const update=(homeworks,newHomeWork)=>{
+    let copy=homeworks
+    homeworks.map((element,i)=>{
+        if(element.id===newHomeWork.id){
+            copy.splice(i,1,newHomeWork)
+        }
+    })
+
+    return copy
+}
+
 export default function(state=initialState,action){
 
     switch(action.type){
@@ -23,10 +34,19 @@ export default function(state=initialState,action){
                 rollcalls:action.payload
             }
         case ADD_ROLLCALL:
-            return {
-                ...state,
-                rollcalls:[...state.rollcalls,action.payload.rollcall]
+            if(state.rollcalls.findIndex(r=>r.id===action.payload.rollcall.id)>-1){
+                return {
+                    ...state,
+                    rollcalls:update([...state.rollcalls],action.payload.rollcall)
+                }
             }
+            else{
+                return {
+                    ...state,
+                    rollcalls:[...state.rollcalls,action.payload.rollcall]
+                }
+            }
+
         case REMOVE_ROLLCALL:
             return {
                 ...state,

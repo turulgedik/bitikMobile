@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "624259618520",
+    "project_id": "bitikmobil",
+    "storage_bucket": "bitikmobil.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624259618520:android:fd718f9210a5b2b2c7e9ad",
+        "android_client_info": {
+          "package_name": "com.labirent.hadiokulum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624259618520-irlo5513ijacerf9cl276qkvhgshcebr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcvYSIUiBxdSkvy5R2c5H6Evdh-Q6HCPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624259618520-irlo5513ijacerf9cl276qkvhgshcebr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,12 +15,55 @@ import { ifIphoneX } from 'react-native-iphone-x-helper'
 import Alert from '../../components/Alert'
 import {logOut} from '../../redux/actions/auth'
 import {getRollCalls} from '../../redux/actions/rollcall'
+import {updateToken} from '../../redux/actions/school'
 import MyModal from '../../components/MyModal'
 import {getNotifications,addNotification} from '../../redux/actions/notifications'
 import Moment from 'moment'
+import * as Permissions from 'expo-permissions'
+import * as Notifications from 'expo-notifications'
 
 LogBox.ignoreAllLogs(true)
 class StudentHome extends Component {
+
+    registerForPushNotificationsAsync = async () => {
+        let token='boş'
+        if (Constants.isDevice) {
+            
+          const { status: existingStatus } = await Notifications.getPermissionsAsync();
+          let finalStatus = existingStatus;
+          if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+          }
+          if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+          }
+          token = (await Notifications.getExpoPushTokenAsync()).data;
+          console.log('s',token);
+          this.setState({ expoPushToken: token });
+        } else {
+          alert('Must use physical device for Push Notifications');
+        }
+      
+        if (Platform.OS === 'android') {
+          Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+          });
+        }
+
+        return token
+    };
+
+    async componentDidMount() {
+        const token = await this.registerForPushNotificationsAsync();
+        this.props.updateToken(token,(state)=>{
+           
+        })
+    }
 
     constructor(props){
         super(props)
@@ -238,7 +281,8 @@ const mapDispatchToProps = {
     logOut,
     getNotifications,
     addNotification,
-    getCourses
+    getCourses,
+    updateToken
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentHome)

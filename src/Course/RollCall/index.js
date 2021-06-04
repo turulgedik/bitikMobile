@@ -52,6 +52,16 @@ class CourseRollCall extends Component {
     }
 
     saveRollCall=()=>{
+
+        if(this.state.selectedTimeTable===null || this.state.selectedStudyIndex===-1){
+            this._alert.setTitle('Hata!')
+            this._alert.setMessage('Yoklama İçin Ders Seçmeniz Gerekmektedir.')
+            this._alert.setConfirmText('Tamam')
+            this._alert.show()
+
+            return
+        }
+
         let studentID=[]
 
         this.state.students.map(item=>studentID.push(item._account.id))
@@ -216,7 +226,7 @@ class CourseRollCall extends Component {
                         <TouchableOpacity style={{width:100,height:50,backgroundColor:'#2ecc71', alignItems:'center',justifyContent:'center'}} onPress={()=>{
                             this.setState({saving:true},()=>this.saveRollCall())
                         }}>
-                            <Text style={{color:'white'}}>Kaydet</Text>
+                            <Text style={{color:'white'}}>{this.state.students.length===0?'Sınıf Tam':'Kaydet'}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

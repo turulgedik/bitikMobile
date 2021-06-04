@@ -12,6 +12,7 @@ import {TrDateTime} from '../components/TrDateTime'
 import _ from 'lodash'
 import {Actions} from 'react-native-router-flux'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+import DropDown from '../components/DropDown'
 
 class RollCallReport extends Component {
 
@@ -39,9 +40,9 @@ class RollCallReport extends Component {
         const {id,classes,students,rollcalls,connecteds}=this.props
         const _class=classes.find(c=>c._account===id)
         const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
-        const filter=rollcalls.rollcalls.filter(r=>r._student._class===id)
+        const filter=rollcalls.rollcalls.filter(r=>r._class._account===id)
         const sortRollCalls=filter.sort((a,b)=>new Date(b.day)-new Date(a.day))
-        console.log('rolls',filter)
+        
         var today=TrDateTime(new Date(Moment(new Date()).format('YYYY-MM-DD')))
         var startDateForDay=TrDateTime(new Date())
         startDateForDay.add(-6)
@@ -96,15 +97,30 @@ class RollCallReport extends Component {
                                         var date=TrDateTime(new Date(i))
                                         console.log("timetable",item.length)
                                         return(
-                                            <View style={{width:'100%', height:100, flexDirection:'row'}}>
-                                                <View style={{flex:1,height:100,flexDirection:'row', alignItems:'center'}}>
-                                                    <Image source={icons.Users} style={{width:50,height:50,tintColor:'red',marginRight:10}} />
-                                                    <Text>Gelmeyen Sayısı : {item.length/_class._timeTable.length}</Text>
+                                            <DropDown name={date.gun() + " - "+i} key={i}>
+                                                <View style={{width:'100%',paddingHorizontal:10}}>
+                                                    {
+                                                        item.map((item,i)=>{
+                                                            return(
+                                                                <DropDown name={item._timeTable.study.name + (item._students.length>0?(" - Gelmeyen Sayısı : "+item._students.length):" - Sınıf Tam")}>
+                                                                    <ScrollView style={{flex:1}}>
+                                                                        {
+                                                                            item._students.map(item=>{
+                                                                                return(
+                                                                                    <View style={{height:50,width:'100%',flexDirection:'row',alignItems:'center'}}>
+                                                                                        <Image source={{uri:item._account.image}} style={{width:35,height:35,marginRight:10}} resizeMode='contain'/>
+                                                                                        <Text>{item._account.first_name+" "+item._account.last_name + " ("+item.number+")"}</Text>
+                                                                                    </View>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </ScrollView>
+                                                                </DropDown>
+                                                            )
+                                                        })
+                                                    }
                                                 </View>
-                                                <View style={{alignItems:'center',justifyContent:'center'}}>
-                                                    <Text>{date.gun()}</Text>
-                                                </View>
-                                            </View>
+                                            </DropDown>
                                         )
                                     })
                                 }
@@ -114,19 +130,50 @@ class RollCallReport extends Component {
                         <Tabs.Item title='Haftalık' component={
                             <ScrollView>
                             {
+                                
                                 _.map(weekGroup,(item,i)=>{
-                                    var firstDate=TrDateTime(new Date(item[0].day))
-                                    var lastDate=TrDateTime(new Date(item[item.length-1].day))
+                                    var firstDate=new TrDateTime(new Date(item[0].day))
+                                    const f_month=firstDate.ay()
+                                    console.log(f_month)
+                                    var lastDate=new TrDateTime(new Date(item[item.length-1].day))
+                                    var text = firstDate.getDate()+" - "+f_month+" / "+lastDate.getDate()+" - "+lastDate.ay()
                                     return(
-                                        <View style={{width:'100%', height:100, flexDirection:'row'}}>
-                                            <View style={{flex:1,height:100,flexDirection:'row', alignItems:'center'}}>
-                                                <Image source={icons.Users} style={{width:50,height:50,tintColor:'red',marginRight:10}} />
-                                                <Text>Gelmeyen Sayısı : {parseFloat(item.length/(_class._timeTable.length*7)).toFixed(2)}</Text>
+                                        <DropDown name={text } key={i}>
+                                            <View style={{width:'100%',paddingHorizontal:10}}>
+                                                {
+                                                    _.map(_.groupBy(item,'day'),(item,i)=>{
+                                                        var date=TrDateTime(new Date(i))
+                                                        return(
+                                                            <DropDown name={date.gun() + " - "+i} key={i}>
+                                                                <View style={{width:'100%',paddingHorizontal:10}}>
+                                                                    {
+                                                                        item.map((item,i)=>{
+                                                                            return(
+                                                                                <DropDown name={item._timeTable.study.name + (item._students.length>0?(" - Gelmeyen Sayısı : "+item._students.length):" - Sınıf Tam")}>
+                                                                                    <ScrollView style={{flex:1}}>
+                                                                                        {
+                                                                                            item._students.map(item=>{
+                                                                                                return(
+                                                                                                    <View style={{height:50,width:'100%',flexDirection:'row',alignItems:'center'}}>
+                                                                                                        <Image source={{uri:item._account.image}} style={{width:35,height:35,marginRight:10}} resizeMode='contain'/>
+                                                                                                        <Text>{item._account.first_name+" "+item._account.last_name + " ("+item.number+")"}</Text>
+                                                                                                    </View>
+                                                                                                )
+                                                                                            })
+                                                                                        }
+                                                                                    </ScrollView>
+                                                                                </DropDown>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </View>
+                                                            </DropDown>
+                                                        )
+                                                    })
+                                                    
+                                                }
                                             </View>
-                                            <View style={{alignItems:'center',justifyContent:'center'}}>
-                                                <Text>{firstDate.getDate()+" - "+firstDate.ay()+" / "+lastDate.getDate()+" - "+lastDate.ay()}</Text>
-                                            </View>
-                                        </View>
+                                        </DropDown>
                                     )
                                 })
                             }
@@ -137,17 +184,43 @@ class RollCallReport extends Component {
                             {
                                 _.map(monthGroup,(item,i)=>{
                                     var monthDate=TrDateTime(new Date(item[0].day))
-                                    const dayCount=this.daysInMonth(monthDate.getMonth()+1,monthDate.getFullYear())
                                     return(
-                                        <View style={{width:'100%', height:100, flexDirection:'row'}}>
-                                            <View style={{flex:1,height:100,flexDirection:'row', alignItems:'center'}}>
-                                                <Image source={icons.Users} style={{width:50,height:50,tintColor:'red',marginRight:10}} />
-                                                <Text>Gelmeyen Sayısı : {parseFloat(item.length/(_class._timeTable.length*dayCount)).toFixed(2)}</Text>
+                                        <DropDown name={monthDate.ay()} key={i}>
+                                            <View style={{width:'100%',paddingHorizontal:10}}>
+                                                {
+                                                    _.map(_.groupBy(item,'day'),(item,i)=>{
+                                                        var date=TrDateTime(new Date(i))
+                                                        return(
+                                                            <DropDown name={date.gun() + " - "+i} key={i}>
+                                                                <View style={{width:'100%',paddingHorizontal:10}}>
+                                                                    {
+                                                                        item.map((item,i)=>{
+                                                                            return(
+                                                                                <DropDown name={item._timeTable.study.name + (item._students.length>0?(" - Gelmeyen Sayısı : "+item._students.length):" - Sınıf Tam")}>
+                                                                                    <ScrollView style={{flex:1}}>
+                                                                                        {
+                                                                                            item._students.map(item=>{
+                                                                                                return(
+                                                                                                    <View style={{height:50,width:'100%',flexDirection:'row',alignItems:'center'}}>
+                                                                                                        <Image source={{uri:item._account.image}} style={{width:35,height:35,marginRight:10}} resizeMode='contain'/>
+                                                                                                        <Text>{item._account.first_name+" "+item._account.last_name + " ("+item.number+")"}</Text>
+                                                                                                    </View>
+                                                                                                )
+                                                                                            })
+                                                                                        }
+                                                                                    </ScrollView>
+                                                                                </DropDown>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </View>
+                                                            </DropDown>
+                                                        )
+                                                    })
+                                                    
+                                                }
                                             </View>
-                                            <View style={{alignItems:'center',justifyContent:'center'}}>
-                                                <Text>{monthDate.ay()}</Text>
-                                            </View>
-                                        </View>
+                                        </DropDown>
                                     )
                                 })
                             }
