@@ -122,7 +122,7 @@ class sRollCallReport extends Component {
                                                     <View style={{width:'100%',padding:10,borderBottomColor:'#e1e1e1', borderBottomWidth:0.5}}>
                                                         <View style={{flexDirection:'row',alignItems:'center',marginBottom:5}}>
                                                             <Image source={icons.Study} style={{width:30,height:30,marginRight:10}} resizeMode='contain'/>
-                                                            <Text>Ders : {x._timeTable.study.name} ({x.index}. Ders)</Text>
+                                                            <Text>Ders : {x._timeTable.study.name}</Text>
                                                         </View>
                                                         <View style={{flexDirection:'row',alignItems:'center',marginBottom:5}}>
                                                             <Image source={icons.Clock} style={{width:30,height:30,marginRight:10}} resizeMode='contain'/>
