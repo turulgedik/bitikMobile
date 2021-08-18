@@ -49,5 +49,39 @@ export const styles=StyleSheet.create({
         marginRight:10,
         alignItems:'center',
         justifyContent:'center'
-    }
+    },
+    textInput:{
+        width:'100%',
+        height:50,
+        borderWidth:2,
+        borderColor:'#1e1e1e',
+        backgroundColor:'rgba(255,255,255,0.5)',
+        borderRadius:25,
+    },
+    textInputSelected:{
+        width:'100%',
+        height:50,
+        borderWidth:2,
+        borderColor:'#1e1e1e',
+        backgroundColor:'rgba(255,255,255,0.5)',
+        borderRadius:25,
+    },
+
+    backgroundModal:{
+        width:'100%',
+        height:'100%',
+        backgroundColor:'rgba(0,0,0,0.5)',
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    contentViewModal:{
+        padding:20,
+        backgroundColor:'white',
+        minHeight:100,
+        minWidth:100,
+        maxWidth:'90%',
+        maxHeight:'80%',
+        borderRadius:25,
+        overflow:'scroll'
+    },
 })

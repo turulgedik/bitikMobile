@@ -18,7 +18,7 @@ export class Classes extends Component {
                     Actions._class({id:elem._account})
                 }}>
                     <View style={{width:50,height:'100%',marginRight:5}}>
-                        <Image source={icons.ClassRoom} style={{height:'100%',width:'100%'}} resizeMode='center'/>
+                        <Image source={icons.ClassRoom} style={{height:'100%',width:'100%'}} resizeMode='contain'/>
                     </View>
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',height:'100%',marginRight:5}}>
                         <Text style={{fontSize:20}}>{elem.name}</Text>

@@ -13,6 +13,7 @@ export default function(state=initialState,action){
                 loading:true,
             }
         case LOADED:
+            console.log('loaded')
             return{
                 ...state,
                 loading:false,

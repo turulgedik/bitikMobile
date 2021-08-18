@@ -171,7 +171,7 @@ class CourseRollCall extends Component {
                         this._myModal.onShow()
                     }}>
                         <Text style={{color:'#042C5C',fontSize:20}}>Yoklama</Text>
-                        <Text style={{color:'#042C5C',fontSize:11}}>Ders : {this.state.selectedTimeTable===null?'Seç':
+                        <Text style={{color:'#042C5C',fontSize:15}}>Ders : {this.state.selectedTimeTable===null?'Seç':
                             (this.state.selectedStudyIndex+1)+". Ders - "+ this.state.selectedTimeTable.study.name}
                         </Text>
                     </TouchableOpacity>

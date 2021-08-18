@@ -4,7 +4,7 @@ import {View,Text,TouchableOpacity,Image, ScrollView,FlatList, TextInput, Switch
 import {styles,windowWidth} from './style'
 import icons from '../../Icons'
 import { Actions } from 'react-native-router-flux'
-import {lock,unLock,sendImage,notify,question} from '../../redux/actions/socket'
+import {lock,unLock,sendImage,notify,question,showPassword} from '../../redux/actions/socket'
 import MyModal from '../../components/MyModal'
 import Alert from '../../components/Alert'
 import * as ImagePicker from 'expo-image-picker';
@@ -16,6 +16,7 @@ import { ifIphoneX } from 'react-native-iphone-x-helper'
 import {addHomeWork,getHomeWorks} from '../../redux/actions/homework'
 import {addNotification} from '../../redux/actions/notifications'
 import axios from 'axios'
+import CustomTextInput from '../../components/TextInput'
 
 const ImageType=ImagePicker.MediaTypeOptions.Images
 const VideoType=ImagePicker.MediaTypeOptions.Videos
@@ -46,6 +47,8 @@ export class _Class extends Component {
         homeWork:'',
         notification:'',
         last_date:Moment(new Date()).format('yyyy-MM-DD'),
+        password:'',
+        work:()=>{}
     }
 
     componentDidMount(){
@@ -180,18 +183,14 @@ export class _Class extends Component {
 
         const _class=classes.find(c=>c._account===id)
         const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
-        console.log("app",classes)
+        console.log("app",app)
         return (
             <ScrollView style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
-                {
-                    app.loading?
-                    <MyModal show={true} closeButton={false}>
-                        <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-                            <Text>Lütfen Bekleyiniz...</Text>
-                        </View>
-                    </MyModal>
-                    :null
-                }
+                <MyModal show={app.loading} closeButton={false}>
+                    <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+                        <Text>Lütfen Bekleyiniz...</Text>
+                    </View>
+                </MyModal>
                 <MyModal ref={nodex=>(this._newNotifyAll=nodex)}>
                     <View style={styles.showMedia}>
                         <View style={{width:'100%',height:50,justifyContent:'center'}}>
@@ -329,7 +328,24 @@ export class _Class extends Component {
                         </TouchableOpacity>
                     </View>
                 </MyModal>
-                
+                <MyModal ref={node=>(this._password=node)}>
+                    <View style={styles.showMedia}>
+                        <Text style={{fontSize:15,marginBottom:20}}>Lütfen Tahtada Yazan 4 Haneli Kodu Girin</Text>
+
+                        <CustomTextInput style={styles.textInput} selectedStyle={styles.textInputSelected}  settings={{keyboardType:'number-pad',value:this.state.password,maxLength:4,textAlign:'center', placeholder:'Şifre', onChangeText:(text)=>{
+                            this.setState({password:text})
+                        }}}/>
+
+                        <TouchableOpacity style={{width:'100%',height:50,borderRadius:25,marginTop:20,alignItems:'center',justifyContent:'center',backgroundColor:'#2ecc71', }} onPress={()=>{
+                            this._password.onClose()
+                            this.state.work()
+                            
+                        }}>
+                            <Text style={{color:'white'}}>Gönder</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                </MyModal>
                 <MyModal ref={node=>(this._homeWork=node)}>
                     <View style={styles.showMedia}>
                         <MyModal ref={node=>(this._datePicker=node)}>
@@ -400,8 +416,10 @@ export class _Class extends Component {
                         con!==null && con!==undefined?
                         <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={()=>{
-                                if(con!==null && con!==undefined)
-                                    this.props.lock(id,false)
+                                if(con!==null && con!==undefined){
+                                    this.props.showPassword(id)
+                                    this.setState({work:()=>this.props.lock(id,false,this.state.password)},()=>this._password.onShow())
+                                }
                                 else{
                                     this._alert.setMessage('Bilgisayar Kapalı!')
                                     this._alert.setTitle('HATA!')
@@ -422,8 +440,10 @@ export class _Class extends Component {
                         con!==null && con!==undefined?
                         <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={()=>{
-                                if(con!==null && con!==undefined)
-                                    this.props.lock(id,true)
+                                if(con!==null && con!==undefined){
+                                    this.props.showPassword(id)
+                                    this.setState({work:()=>this.props.lock(id,true,this.state.password)},()=>this._password.onShow())
+                                }
                                 else{
                                     this._alert.setMessage('Bilgisayar Kapalı!')
                                     this._alert.setTitle('HATA!')
@@ -442,7 +462,14 @@ export class _Class extends Component {
                     }
                     <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                         <TouchableOpacity onPress={()=>{
-                            Actions.rollCall({id:id})
+                            this.setState({work:()=>{
+                                this._alert.setMessage('Bilgisayar Kapalı!')
+                                this._alert.setTitle('HATA!')
+                                this._alert.setConfirmText('Tamam')
+                                this._alert.show();
+                            }},this._password.onShow())
+                            
+                            //Actions.rollCall({id:id})
                         }}>
                             <View style={{...styles.actionButtons,backgroundColor:'#25BDAE'}}>
                                 <Image source={icons.IconCrosshair} style={{width:50,height:50,tintColor:'white'}} resizeMode='contain'/>
@@ -614,7 +641,8 @@ const mapDispatchToProps = {
     question,
     addHomeWork,
     getHomeWorks,
-    addNotification
+    addNotification,
+    showPassword
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Class)
