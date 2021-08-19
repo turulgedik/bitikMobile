@@ -337,8 +337,10 @@ export class _Class extends Component {
                         }}}/>
 
                         <TouchableOpacity style={{width:'100%',height:50,borderRadius:25,marginTop:20,alignItems:'center',justifyContent:'center',backgroundColor:'#2ecc71', }} onPress={()=>{
-                            this._password.onClose()
-                            this.state.work()
+                            this.setState({password:''},()=>{
+                                this._password.onClose()
+                                this.state.work()
+                            })
                             
                         }}>
                             <Text style={{color:'white'}}>Gönder</Text>
