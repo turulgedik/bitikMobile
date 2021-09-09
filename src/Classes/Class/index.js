@@ -177,13 +177,13 @@ export class _Class extends Component {
 
     render() {
 
-        const {id,classes,students,connecteds,app,homeWork}=this.props
+        const {id,classes,students,connecteds,app,homeWork,user}=this.props
         const filterHomeWorks=homeWork.filter(h=>h._class._account===id)
         const sortHomeWorks=filterHomeWorks.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
 
         const _class=classes.find(c=>c._account===id)
         const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
-        console.log("app",app)
+        console.log("app",user)
         return (
             <ScrollView style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
                 <MyModal show={app.loading} closeButton={false}>
@@ -337,10 +337,8 @@ export class _Class extends Component {
                         }}}/>
 
                         <TouchableOpacity style={{width:'100%',height:50,borderRadius:25,marginTop:20,alignItems:'center',justifyContent:'center',backgroundColor:'#2ecc71', }} onPress={()=>{
-                            this.setState({password:''},()=>{
-                                this._password.onClose()
-                                this.state.work()
-                            })
+                            this._password.onClose()
+                            this.state.work()
                             
                         }}>
                             <Text style={{color:'white'}}>Gönder</Text>
@@ -419,8 +417,14 @@ export class _Class extends Component {
                         <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={()=>{
                                 if(con!==null && con!==undefined){
-                                    this.props.showPassword(id)
-                                    this.setState({work:()=>this.props.lock(id,false,this.state.password)},()=>this._password.onShow())
+                                    if(user.user_type===2)
+                                        this.props.lock(id,false,-1)
+                                    else{
+                                        this.props.showPassword(id)
+                                        this.setState({password:'',work:()=>this.props.lock(id,false,this.state.password)},()=>this._password.onShow())
+                                    }
+                                    
+                                    
                                 }
                                 else{
                                     this._alert.setMessage('Bilgisayar Kapalı!')
@@ -443,8 +447,13 @@ export class _Class extends Component {
                         <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                             <TouchableOpacity onPress={()=>{
                                 if(con!==null && con!==undefined){
-                                    this.props.showPassword(id)
-                                    this.setState({work:()=>this.props.lock(id,true,this.state.password)},()=>this._password.onShow())
+                                    if(user.user_type===2)
+                                        this.props.lock(id,true,-1)
+                                    else{
+                                        this.props.showPassword(id)
+                                        this.setState({password:'',work:()=>this.props.lock(id,true,this.state.password)},()=>this._password.onShow())
+                                    }
+                                    
                                 }
                                 else{
                                     this._alert.setMessage('Bilgisayar Kapalı!')
@@ -633,6 +642,7 @@ const mapStateToProps = (state) => ({
     connecteds:state.Socket.connecteds,
     app:state.App,
     homeWork:state.HomeWork.homeworks,
+    user:state.User.user,
 })
 
 const mapDispatchToProps = {
