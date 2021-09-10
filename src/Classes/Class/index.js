@@ -473,14 +473,9 @@ export class _Class extends Component {
                     }
                     <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                         <TouchableOpacity onPress={()=>{
-                            this.setState({work:()=>{
-                                this._alert.setMessage('Bilgisayar Kapalı!')
-                                this._alert.setTitle('HATA!')
-                                this._alert.setConfirmText('Tamam')
-                                this._alert.show();
-                            }},this._password.onShow())
                             
-                            //Actions.rollCall({id:id})
+                            
+                            Actions.rollCall({id:id})
                         }}>
                             <View style={{...styles.actionButtons,backgroundColor:'#25BDAE'}}>
                                 <Image source={icons.IconCrosshair} style={{width:50,height:50,tintColor:'white'}} resizeMode='contain'/>
