@@ -1,6 +1,6 @@
 import { array, element, func } from 'prop-types'
 import {SCHOOL_ERROR,SCHOOL_LOADED,SCHOOL_LOADING, CLASS_ADD, GROUP_ADD, GROUP_REMOVE, TIMETABLE_UPDATE,STUDENT_ADD,STUDENT_REMOVE,STUDENT_UPDATE,
-TEACHER_ADD,TEACHER_REMOVE,TEACHER_UPDATE} from '../actions/types'
+TEACHER_ADD,TEACHER_REMOVE,TEACHER_UPDATE,STUDENT_ALL} from '../actions/types'
 import {__} from 'lodash'
 
 const initialState={
@@ -106,6 +106,11 @@ export default function(state=initialState,action){
                 ...state,
                 school:{...state.school,classes:updateGroup([...state.school.classes],action.payload.group)}
         }
+        case STUDENT_ALL:
+            return{
+                ...state,
+                school:{...state.school,students:[...state.school.students.concat(action.payload)]}
+            }
         case STUDENT_ADD:
             return{
                 ...state,

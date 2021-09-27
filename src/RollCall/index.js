@@ -263,21 +263,21 @@ class RollCall extends Component {
                     }}>
                         <Image source={icons.Back} style={{height:'100%',width:'100%', tintColor:'#0A7ADD'}} resizeMode='contain'/>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{flex:1,alignItems:'center',justifyContent:'center'}} onPress={()=>{
-                        this._myModal.onShow()
-                    }}>
-                        <Text style={{color:'#042C5C',fontSize:20}}>Yoklama</Text>
-                        <Text style={{color:'#042C5C',fontSize:15}}>Ders : {this.state.selectedTimeTable===null?'Seç':
-                            (this.state.selectedStudyIndex+1)+". Ders - "+ this.state.selectedTimeTable.study.name}
-                        </Text>
-                    </TouchableOpacity>
+                    <Text style={{color:'#042C5C',flex:1,height:'100%',textAlign:'center', fontSize:20, marginBottom:20}}>{_class.other+" / "+_class.name + " Yoklama Listesi"}</Text>
+                    
                     <View style={{width:50,height:50}}>
                         
                     </View>
                 </View>
                 <ScrollView style={{marginHorizontal:-10,flex:1}}>
                     <View style={{width:'100%',padding:10}}>
-                        <Text style={{color:'#042C5C', fontSize:20, marginBottom:20}}>{_class.other+" / "+_class.name + " Yoklama Listesi"}</Text>
+                        <TouchableOpacity style={{flex:1,marginBottom:20,alignItems:'center',justifyContent:'center'}} onPress={()=>{
+                            this._myModal.onShow()
+                        }}>
+                            <Text style={{color:'#042C5C',fontSize:20,fontWeight:'bold'}}>Ders : {this.state.selectedTimeTable===null?'Seç':
+                                (this.state.selectedStudyIndex+1)+". Ders - "+ this.state.selectedTimeTable.study.name}
+                            </Text>
+                        </TouchableOpacity>
                         <View style={{flexDirection:'row',flexWrap:'wrap'}}>
                             {
                                 students.filter(s=>s._class!==null&&s._class===id).map(student=>{

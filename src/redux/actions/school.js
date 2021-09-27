@@ -3,7 +3,7 @@ import { func } from 'prop-types'
 import {SCHOOL_ERROR,SCHOOL_LOADED,SCHOOL_LOADING,CLASS_ADD,GROUP_ADD} from '../actions/types'
 import {BASE_URL} from './host'
 
-export const getSchool=()=>(dispatch,getState)=>{
+export const getSchool=(result=()=>{})=>(dispatch,getState)=>{
     dispatch({type:SCHOOL_LOADING})
 
     axios.get(BASE_URL+'/school/api/School/',tokenConfig(getState))
@@ -12,6 +12,7 @@ export const getSchool=()=>(dispatch,getState)=>{
         type:SCHOOL_LOADED,
         payload:res.data
       })
+      result(true)
     })
     .catch(err=>{
        dispatch({

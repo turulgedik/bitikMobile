@@ -73,6 +73,26 @@ export const lock = (classID, lock = Boolean, password) => (dispatch, getState) 
             console.log('socket', err)
         })
 }
+
+export const shutDown = (classID, password) => (dispatch, getState) => {
+    dispatch({ type: LOADING })
+
+    var data = {
+        _class: classID,
+        command: 'shutDown',
+        description: '',
+        password
+    }
+
+    axios.post(BASE_URL + '/school/api/CommandHistory/', data, tokenConfig(getState))
+        .then(res => {
+            dispatch({ type: LOADED })
+            socket.emit('shutDown', data)
+        })
+        .catch(err => {
+            console.log('socket', err)
+        })
+}
 export const unLock = (classID) => dispatch => {
     socket.emit('unLock', classID)
 }

@@ -4,7 +4,7 @@ import {View,Text,TouchableOpacity,Image, ScrollView,FlatList, TextInput, Switch
 import {styles,windowWidth} from './style'
 import icons from '../../Icons'
 import { Actions } from 'react-native-router-flux'
-import {lock,unLock,sendImage,notify,question,showPassword} from '../../redux/actions/socket'
+import {lock,unLock,sendImage,notify,question,showPassword,shutDown} from '../../redux/actions/socket'
 import MyModal from '../../components/MyModal'
 import Alert from '../../components/Alert'
 import * as ImagePicker from 'expo-image-picker';
@@ -471,6 +471,35 @@ export class _Class extends Component {
                             </TouchableOpacity>
                         </View>:null
                     }
+                    {
+                        con!==null && con!==undefined?
+                        <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
+                            <TouchableOpacity onPress={()=>{
+                                if(con!==null && con!==undefined){
+                                    if(user.user_type===2)
+                                        this.props.lock(id,-1)
+                                    else{
+                                        this.props.showPassword(id)
+                                        this.setState({password:'',work:()=>this.props.shutDown(id,this.state.password)},()=>this._password.onShow())
+                                    }
+                                    
+                                }
+                                else{
+                                    this._alert.setMessage('Bilgisayar Kapalı!')
+                                    this._alert.setTitle('HATA!')
+                                    this._alert.setConfirmText('Tamam')
+                                    this._alert.show();
+                                }
+                            }}>
+                                <View style={{...styles.actionButtons,backgroundColor:'#e74c3c'}}>
+                                    <Image source={icons.Lock} style={{width:50,height:50,tintColor:'white'}} resizeMode='contain'/>
+                                </View>
+                                <View style={{alignItems:'center',justifyContent:'center',height:50}}>
+                                    <Text>Kapat</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>:null
+                    }
                     <View style={{width:'50%',height:200,alignItems:'center',justifyContent:'center'}}>
                         <TouchableOpacity onPress={()=>{
                             
@@ -649,7 +678,8 @@ const mapDispatchToProps = {
     addHomeWork,
     getHomeWorks,
     addNotification,
-    showPassword
+    showPassword,
+    shutDown
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Class)

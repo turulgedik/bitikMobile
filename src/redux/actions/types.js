@@ -8,6 +8,7 @@ export const LOGIN_SUCCESS='LOGIN_SUCCESS'
 export const LOGIN_FAIL='LOGIN_FAIL'
 export const LOGOUT='LOGOUT'
 
+export const STUDENT_ALL="STUDENT_ALL"
 export const SCHOOL_LOADING='SCHOOL_LOADING'
 export const SCHOOL_LOADED='SCHOOL_LOADED'
 export const SCHOOL_ERROR='SCHOOL_ERROR'

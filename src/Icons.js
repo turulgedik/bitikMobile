@@ -39,6 +39,7 @@ const icons={
     Not:require('../icons/not.png'),
     HomeWork:require('../icons/homework.png'),
     WasSeen:require('../icons/wasSeen.png'),
+    ShutDown:require('../icons/shutdown.png'),
 
     TeacherSMS:require('../icons/teacher_sms_bg.png'),
     StudentSMS:require('../icons/student_sms_bg.png'),

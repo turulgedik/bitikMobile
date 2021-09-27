@@ -9,6 +9,7 @@ import {getSchool} from '../redux/actions/school'
 import _ from 'lodash'
 import {Actions} from 'react-native-router-flux'
 import {updateToken} from '../redux/actions/school'
+import {getStudents} from '../redux/actions/student'
 import {loginSocket} from '../redux/actions/socket'
 import {getReports} from '../redux/actions/atReport'
 import {getNotifications,addNotification} from '../redux/actions/notifications'
@@ -66,12 +67,25 @@ class Home extends Component {
 
     constructor(props){
         super(props)
-        props.getSchool()
+        props.getSchool((res)=>{
+            if(res)
+                this.getStudents()
+        })
         props.loginSocket()
         props.getReports()
         props.getNotifications()
         props.getCourses()
 
+    }
+    getStudents=(limit=0, offset=100)=>{
+        console.log('start',this.props)
+        this.props.getStudents(limit,offset,(data)=>{
+            console.log("getStudents",data.length)
+
+            if(data.length>0)
+                return this.getStudents(limit=offset,offset=offset+100)
+
+        })
     }
     message=(title,message)=>{
         this._alert.setTitle(title)
@@ -284,7 +298,9 @@ const mapDispatchToProps = {
     getNotifications,
     addNotification,
     getCourses,
-    updateToken
+    updateToken,
+    getSchool,
+    getStudents
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
