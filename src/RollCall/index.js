@@ -283,6 +283,7 @@ class RollCall extends Component {
                                 students.filter(s=>s._class!==null&&s._class===id).map(student=>{
                                     var firstNameArray=student._account.first_name.split(' ')
                                     let first_name=firstNameArray[0]
+
                                     if(firstNameArray.length>1){
                                         const newName=firstNameArray[0].length>firstNameArray[1].length?firstNameArray[0].charAt(0)+'. '+firstNameArray[1]:
                                             firstNameArray[0]+' '+firstNameArray[1].charAt(0)+'.'
@@ -299,7 +300,7 @@ class RollCall extends Component {
                                                     this.removeStudent(student)
                                                 }
                                             }}>
-                                                <Image source={student._account.image===null?icons.User:{uri:IMAGE_URL+student._account.image}} style={{width:'100%',flex:1}} resizeMode='contain'/>
+                                                <Image source={student._account.image===null?icons.User:{uri:student._account.image}} style={{width:'100%',flex:1}} resizeMode='contain'/>
                                                 <View style={{width:'100%',height:60,justifyContent:'center',alignItems:'center'}}>
                                                     <Text style={{fontSize:12,textAlign:'center'}}>{first_name+" "+student._account.last_name+'\r\n('+student.number+')'}</Text>
                                                 </View>

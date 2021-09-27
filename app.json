@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hadi Okulum",
     "slug": "HadiOkulum",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -21,7 +21,7 @@
     },
     "android": {
       "googleServicesFile": "./google-services.json",
-      "versionCode":10,
+      "versionCode":11,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
