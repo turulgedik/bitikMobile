@@ -5,7 +5,7 @@ import icons from '../../Icons'
 import {styles} from './style'
 import { Avatar } from 'react-native-paper'
 import { connect } from 'react-redux'
-import {getSchool} from '../../redux/actions/school'
+import {getSchool,setSchool} from '../../redux/actions/school'
 import _ from 'lodash'
 import {Actions} from 'react-native-router-flux'
 import {loginSocket} from '../../redux/actions/socket'
@@ -21,6 +21,7 @@ import {getNotifications,addNotification} from '../../redux/actions/notification
 import Moment from 'moment'
 import * as Permissions from 'expo-permissions'
 import * as Notifications from 'expo-notifications'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 LogBox.ignoreAllLogs(true)
 class StudentHome extends Component {
@@ -68,7 +69,7 @@ class StudentHome extends Component {
     constructor(props){
         super(props)
 
-        props.getSchool()
+        this.getSchool()
         props.loginSocket()
         props.getReports()
         props.getRollCalls(props.user.id)
@@ -81,6 +82,33 @@ class StudentHome extends Component {
         this._alert.setMessage(message)
         this._alert.setConfirmText('Tamam')
         this._alert.show()
+    }
+
+    getSchool=async()=>{
+        try {
+            const value = await AsyncStorage.getItem('school')
+            const jsonValue=JSON.parse(value)
+            if(value!==null){
+                const updateTime=jsonValue.updateTime
+                const userUpdateTime=this.props.updateTime
+                if(updateTime!==userUpdateTime){
+                    console.log('güncelleme var')
+                    this.props.getSchool((res)=>{
+                    
+                    })
+                }else{
+                    console.log('güncelleme Yok')
+                    this.props.setSchool(jsonValue)
+                }
+            }else{
+                this.props.getSchool((res)=>{
+                    
+                })
+            }
+            console.log('getschool',jsonValue)
+        } catch(e) {
+            console.log('getschool',e)
+        }
     }
 
     updateWasSeen=(selected)=>{
@@ -270,6 +298,7 @@ const mapStateToProps = (state) => ({
     rollcalls:state.RollCall,
     notifications:state.Notification.notifications,
     courses:state.Course.courses,
+    updateTime:state.User.user.updateTime,
 
 })
 
@@ -282,7 +311,8 @@ const mapDispatchToProps = {
     getNotifications,
     addNotification,
     getCourses,
-    updateToken
+    updateToken,
+    setSchool
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentHome)

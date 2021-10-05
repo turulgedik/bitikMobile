@@ -40,6 +40,7 @@ const icons={
     HomeWork:require('../icons/homework.png'),
     WasSeen:require('../icons/wasSeen.png'),
     ShutDown:require('../icons/shutdown.png'),
+    Loading:require('../icons/loading.gif'),
 
     TeacherSMS:require('../icons/teacher_sms_bg.png'),
     StudentSMS:require('../icons/student_sms_bg.png'),

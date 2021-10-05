@@ -5,7 +5,7 @@ import icons from '../Icons'
 import {styles} from './style'
 import { Avatar } from 'react-native-paper'
 import { connect } from 'react-redux'
-import {getSchool} from '../redux/actions/school'
+import {getSchool,setSchool} from '../redux/actions/school'
 import _ from 'lodash'
 import {Actions} from 'react-native-router-flux'
 import {updateToken} from '../redux/actions/school'
@@ -22,6 +22,8 @@ import Moment from 'moment'
 import * as Permissions from 'expo-permissions'
 import * as Notifications from 'expo-notifications'
 import Constants from 'expo-constants'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 LogBox.ignoreAllLogs(true)
 class Home extends Component {
@@ -67,15 +69,38 @@ class Home extends Component {
 
     constructor(props){
         super(props)
-        props.getSchool((res)=>{
-            if(res)
-                this.getStudents()
-        })
         props.loginSocket()
         props.getReports()
         props.getNotifications()
         props.getCourses()
 
+        this.getSchool()
+    }
+    getSchool=async()=>{
+        try {
+            const value = await AsyncStorage.getItem('school')
+            const jsonValue=JSON.parse(value)
+            if(value!==null){
+                const updateTime=jsonValue.updateTime
+                const userUpdateTime=this.props.updateTime
+                if(updateTime!==userUpdateTime){
+                    console.log('güncelleme var')
+                    this.props.getSchool((res)=>{
+                    
+                    })
+                }else{
+                    console.log('güncelleme Yok')
+                    this.props.setSchool(jsonValue)
+                }
+            }else{
+                this.props.getSchool((res)=>{
+                    
+                })
+            }
+            console.log('getschool',jsonValue)
+        } catch(e) {
+            console.log('getschool',e)
+        }
     }
     getStudents=(limit=0, offset=100)=>{
         console.log('start',this.props)
@@ -111,10 +136,10 @@ class Home extends Component {
     }
 
     render() {
-        const {classes,students,notifications,courses}=this.props
+        const {classes,students,notifications,courses,isLoading}=this.props
         const sortNotify=notifications.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
         const group=_.groupBy(classes,'other')
-        console.log('user',this.props.userID)
+        console.log('user',isLoading)
         const navigatorView=_.map(group,(elem,i)=>{
             const level=elem[0].other
             let count=0
@@ -138,6 +163,7 @@ class Home extends Component {
             )
         })
         return (
+            
             <ScrollView style={{padding:10,marginTop:ifIphoneX(20,0)}}>
                 <Alert ref={node=>(this._alert=node)} />
                 <MyModal ref={node=>(this._notify=node)}>
@@ -217,7 +243,14 @@ class Home extends Component {
                 </View>
 
                 <View style={{marginBottom:20,flexDirection:'row',flexWrap:'wrap'}}>
-                    {navigatorView}
+                    {
+                        isLoading?
+                        <View style={{alignItems:'center',justifyContent:'center',width:'100%',marginVertical:10}}>
+                            <Image source={icons.Loading} style={{width:50,height:50,marginBottom:10}}/>
+                            <Text style={{textAlign:'center',fontSize:20}}>{"Okul Bilgileri Yükleniyor...\r\nLütfen Bekleyiniz"}</Text>
+                        </View>:
+                        navigatorView
+                    }
                 </View>
                 {
                     courses.length>0?
@@ -283,9 +316,11 @@ class Home extends Component {
 
 const mapStateToProps = (state) => ({
     classes:state.School.school.classes,
+    isLoading:state.School.isLoading,
     students:state.School.school.students,
     user:state.User.auth,
     userID:state.User.user.id,
+    updateTime:state.User.user.updateTime,
     notifications:state.Notification.notifications,
     courses:state.Course.courses,
 })
@@ -299,7 +334,7 @@ const mapDispatchToProps = {
     addNotification,
     getCourses,
     updateToken,
-    getSchool,
+    setSchool,
     getStudents
 }
 

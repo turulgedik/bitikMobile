@@ -23,6 +23,7 @@ const saveToken = async (token) => {
 const removeToken = async () => {
     try {
         await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('school');
     } catch (err) {
         console.log(err);
     }

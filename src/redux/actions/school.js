@@ -22,6 +22,15 @@ export const getSchool=(result=()=>{})=>(dispatch,getState)=>{
 
 }
 
+export const setSchool=(data)=>(dispatch,getState)=>{
+  dispatch({type:SCHOOL_LOADING})
+  dispatch({
+    type:SCHOOL_LOADED,
+    payload:[data]
+  })
+
+}
+
 export const createClass=(account,_class,request=func())=>(dispatch,getState)=>{
   const body=JSON.stringify({_account:account,_class:_class})
 

@@ -290,6 +290,7 @@ class RollCall extends Component {
                                         first_name=newName
                                     }
                                     const roll=_students.findIndex(s=>s._account.id===student._account.id)>-1?true:false
+                                    console.log('image',student._account.image)
                                     return (
                                         <View style={styles.studentView}>
                                             <TouchableOpacity style={{...styles.student,backgroundColor:roll!==false?'#e74c3c':'white', }} onPress={()=>{
@@ -300,7 +301,7 @@ class RollCall extends Component {
                                                     this.removeStudent(student)
                                                 }
                                             }}>
-                                                <Image source={student._account.image===null?icons.User:{uri:student._account.image}} style={{width:'100%',flex:1}} resizeMode='contain'/>
+                                                <Image source={student._account.image===null?icons.User:{uri:student._account.image.indexOf(IMAGE_URL)>-1?student._account.image:IMAGE_URL+student._account.image}} style={{width:'100%',flex:1}} resizeMode='contain'/>
                                                 <View style={{width:'100%',height:60,justifyContent:'center',alignItems:'center'}}>
                                                     <Text style={{fontSize:12,textAlign:'center'}}>{first_name+" "+student._account.last_name+'\r\n('+student.number+')'}</Text>
                                                 </View>
