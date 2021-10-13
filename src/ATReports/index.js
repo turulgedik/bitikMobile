@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {View,Text,TouchableOpacity,Image, ScrollView,FlatList, TextInput} from 'react-native'
 import {styles} from './style'
 import icons from '../Icons'
-import {getRollCalls,removeRollCall,addRollCall} from '../redux/actions/rollcall'
+import {getReports} from '../redux/actions/atReport'
 import Tabs from '../components/Tabs'
 import Moment from 'moment'
 import axios from 'axios'
@@ -27,16 +27,46 @@ class ATReports extends Component {
     }
 
     componentDidMount(){
-        
+        this.getData(0)
     }
 
     daysInMonth = (month, year)=> {
         return new Date(year, month, 0).getDate();
     }
 
+    getData=(index)=>{
+        let first_date=TrDateTime(new Date())
+        first_date.add(-6)
+        let end_date=TrDateTime(new Date())
+        end_date.add(+1)
+        let firstDate=''
+        let endDate=''
+
+        firstDate=Moment(first_date).format('yyyy-MM-DD')
+        endDate=Moment(end_date).format('yyyy-MM-DD')
+
+        if(index===1){
+            first_date=TrDateTime(new Date())
+            const dayCount=this.daysInMonth(first_date.getMonth()+1,first_date.getFullYear())
+            first_date.add(-dayCount)
+
+            firstDate=Moment(first_date).format('yyyy-MM-DD')
+        }
+
+        if(index===2){
+            firstDate=Moment(new Date()).format('yyyy')+'-01-01'
+            endDate=Moment(new Date()).format('yyyy')+'-12-31'
+        }
+
+        this.props.getReports(firstDate,endDate,this.props.id,(data)=>{
+            
+        })
+
+    }
+
     render() {
 
-        const {id,classes,connecteds}=this.props
+        const {id,classes,connecteds,loading}=this.props
         const _class=classes.find(c=>c._account===id)
         const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
         const at=this.props.at.filter(s=>s._class===id)
@@ -64,7 +94,7 @@ class ATReports extends Component {
                         <Image source={icons.Back} style={{height:'100%',width:'100%', tintColor:'#0A7ADD'}} resizeMode='contain'/>
                     </TouchableOpacity>
                     <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-                        <Text style={{color:'#042C5C',fontSize:25}}>{_class.other + " / "+_class.name}</Text>
+                        
                         <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                             <Text style={{fontSize:20}}>Tahta Raporu</Text>
                         </View>
@@ -73,9 +103,17 @@ class ATReports extends Component {
 
                     </View>
                 </View>
+                <Text style={{color:'#042C5C',fontSize:25,textAlign:'center',marginBottom:20}}>{_class.other + " / "+_class.name}</Text>
+                {
+                    loading?
+                    <View style={{alignItems:'center',justifyContent:'center',width:'100%',marginVertical:10}}>
+                        <Image source={icons.Loading} style={{width:50,height:50,marginBottom:10}}/>
+                        <Text style={{textAlign:'center',fontSize:20}}>{"Okul Bilgileri Yükleniyor...\r\nLütfen Bekleyiniz"}</Text>
+                    </View>:<View/>
+                }
                 <View style={{marginHorizontal:-10,flex:1}}>
                     {
-                        <Tabs scrollEnabled={false} onChangeIndex={this.onChangeIndex}>
+                        <Tabs scrollEnabled={false} onChangeIndex={(index)=>this.getData(index)}>
                             <Tabs.Item title='Bugün' component={
                                 <ScrollView>
                                     {
@@ -158,11 +196,12 @@ class ATReports extends Component {
 const mapStateToProps = (state) => ({
     classes:state.School.school.classes,
     at:state.AT.reports,
+    loading:state.AT.loading,
     connecteds:state.Socket.connecteds
 })
 
 const mapDispatchToProps = {
-
+    getReports
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ATReports)

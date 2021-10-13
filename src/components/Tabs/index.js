@@ -23,8 +23,7 @@ export default class Tabs extends Component {
         this.setState({selectedIndex:index,drag:false},()=>{
             this.scrollView.scrollTo({x: screenWidth * index});
         })
-        if(this.props.onChangeIndex!==undefined)
-            this.props.onChangeIndex(index)
+        
     }
 
     render() {
@@ -59,6 +58,8 @@ export default class Tabs extends Component {
                         const info = elem.nativeEvent.contentOffset.x;
                         const index = Math.round(info / screenWidth);
                         this.pageChange(index);
+                        if(this.props.onChangeIndex!==undefined)
+                            this.props.onChangeIndex(index)
                     }}
                     onScroll={() => {
                         this.setState({drag:true})

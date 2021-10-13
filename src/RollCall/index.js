@@ -13,6 +13,8 @@ import Alert from '../components/Alert'
 import {Actions} from 'react-native-router-flux'
 import {BASE_URL,IMAGE_URL} from '../redux/actions/host'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+import {getStudents} from '../redux/actions/student'
+import {getTimeTable} from '../redux/actions/school'
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -36,18 +38,45 @@ class RollCall extends Component {
             day:'',
             saving:false,
             _students:[],
+            timeTable:[],
+            students:[],
+            loading:true,
         }
     }
 
     componentDidMount(){
-        this.props.getRollCalls()
+        this.getData()
     }
+
+    getData=(only=false)=>{
+        const {date}=this.state
+        this.props.getRollCalls(date,date,this.props.id,(state)=>{
+            if(state)
+                this.control()
+        })
+
+        if(only)
+            return
+
+        this.props.getStudents(this.props.id,(data)=>{
+            this.setState({students:data,loading:false})
+        })
+        this.props.getTimeTable(this.props.id,(data)=>{
+            this.setState({timeTable:data})
+        })
+
+    }
+
     componentDidUpdate(prevProps,prevState){
-        if(prevState.selectedTimeTable!==this.state.selectedTimeTable){
-            let currentRollCall=this.props.rollcalls.rollcalls.find(r=>(r._class._account===this.props.id && r.day===this.state.date) && (r._timeTable.id===this.state.selectedTimeTable.id && r.index===this.state.selectedStudyIndex))
-            console.log(currentRollCall)
-            this.setState({_students:currentRollCall!==undefined?currentRollCall._students:[],currentRoll:currentRollCall})
+        if(prevState.selectedTimeTable!==this.state.selectedTimeTable || prevState.date !== this.state.date){
+            this.control()
         }
+    }
+
+    control=()=>{
+        let currentRollCall=this.props.rollcalls.rollcalls.find(r=>(r._class===this.props.id && r.day===this.state.date) && (r._timeTable.id===this.state.selectedTimeTable.id && r.index===this.state.selectedStudyIndex))
+        console.log(currentRollCall)
+        this.setState({_students:currentRollCall!==undefined?currentRollCall._students:[],currentRoll:currentRollCall})
     }
 
     saveRollCall=()=>{
@@ -160,8 +189,8 @@ class RollCall extends Component {
     }
 
     render() {
-        const {id,classes,students,rollcalls}=this.props
-        const {_students,saving}=this.state
+        const {id,classes,rollcalls}=this.props
+        const {_students,students,saving,timeTable,loading}=this.state
         const _class=classes.find(c=>c._account===id)
         var nowDate=new Date(this.state.date)
         /*
@@ -219,7 +248,7 @@ class RollCall extends Component {
                                 </View>
                                 <View style={{width:'100%'}}>
                                     <DateTimePicker style={{width:'100%',}} value={new Date(this.state.date)} mode='date' display='default' locale='tr' onChange={(event,date)=>{
-                                        this.setState({date:Moment(date).format('yyyy-MM-DD')})
+                                        this.setState({date:Moment(date).format('yyyy-MM-DD')},()=>this.getData(true))
                                     }}/>
                                 </View>
                             </View>
@@ -241,13 +270,13 @@ class RollCall extends Component {
                         <Text style={{fontSize:20,color:'#042C5C',marginBottom:20}}>Ders Seç</Text>
                         <ScrollView>
                             {
-                                _class._timeTable.filter(t=>t.day===nowDate.getDay()).map((elem,i)=>{
+                                timeTable.filter(t=>t.day===nowDate.getDay()).map((elem,i)=>{
                                     const selected=this.state.selectedStudyIndex===i?true:false
                                     return(
                                         <TouchableOpacity style={selected?styles.studyViewSelected:styles.studyView} onPress={()=>{
                                             this.setState({selectedTimeTable:elem,selectedStudyIndex:parseInt(i)})
                                         }}>
-                                            <Text style={{paddingHorizontal:10}}>{(i+1)+". Ders - "+elem.study.name}</Text>
+                                            <Text style={{paddingHorizontal:10}}>{elem.study.name}</Text>
                                         </TouchableOpacity>
                                     )
                                 })
@@ -275,11 +304,16 @@ class RollCall extends Component {
                             this._myModal.onShow()
                         }}>
                             <Text style={{color:'#042C5C',fontSize:20,fontWeight:'bold'}}>Ders : {this.state.selectedTimeTable===null?'Seç':
-                                (this.state.selectedStudyIndex+1)+". Ders - "+ this.state.selectedTimeTable.study.name}
+                                this.state.selectedTimeTable.study.name}
                             </Text>
                         </TouchableOpacity>
                         <View style={{flexDirection:'row',flexWrap:'wrap'}}>
                             {
+                                loading?
+                                <View style={{alignItems:'center',justifyContent:'center',width:'100%',marginVertical:10}}>
+                                    <Image source={icons.Loading} style={{width:50,height:50,marginBottom:10}}/>
+                                    <Text style={{textAlign:'center',fontSize:20}}>{"Veriler yükleniyor. Lütfen bekleyiniz.."}</Text>
+                                </View>:
                                 students.filter(s=>s._class!==null&&s._class===id).map(student=>{
                                     var firstNameArray=student._account.first_name.split(' ')
                                     let first_name=firstNameArray[0]
@@ -290,7 +324,7 @@ class RollCall extends Component {
                                         first_name=newName
                                     }
                                     const roll=_students.findIndex(s=>s._account.id===student._account.id)>-1?true:false
-                                    console.log('image',student._account.image)
+                                    
                                     return (
                                         <View style={styles.studentView}>
                                             <TouchableOpacity style={{...styles.student,backgroundColor:roll!==false?'#e74c3c':'white', }} onPress={()=>{
@@ -341,7 +375,9 @@ const mapDispatchToProps = {
     getRollCalls,
     addRollCall,
     removeRollCall,
-    saveRollCall
+    saveRollCall,
+    getStudents,
+    getTimeTable
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RollCall)

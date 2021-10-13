@@ -70,13 +70,16 @@ class Home extends Component {
     constructor(props){
         super(props)
         props.loginSocket()
-        props.getReports()
+        //props.getReports()
         props.getNotifications()
         props.getCourses()
 
-        this.getSchool()
+        props.getSchool((res)=>{
+                    
+        })
     }
     getSchool=async()=>{
+        /*
         try {
             const value = await AsyncStorage.getItem('school')
             const jsonValue=JSON.parse(value)
@@ -93,14 +96,13 @@ class Home extends Component {
                     this.props.setSchool(jsonValue)
                 }
             }else{
-                this.props.getSchool((res)=>{
-                    
-                })
+                
             }
             console.log('getschool',jsonValue)
         } catch(e) {
             console.log('getschool',e)
         }
+        */
     }
     getStudents=(limit=0, offset=100)=>{
         console.log('start',this.props)
@@ -142,11 +144,7 @@ class Home extends Component {
         console.log('user',isLoading)
         const navigatorView=_.map(group,(elem,i)=>{
             const level=elem[0].other
-            let count=0
-            elem.map(item=>{
-                const studentCount=students.filter(s=>s._class===item._account).length
-                count+=studentCount
-            })
+
             return(
                 <TouchableOpacity style={styles.groupItem} onPress={()=>{
                     Actions.classes({level:level})
@@ -155,10 +153,7 @@ class Home extends Component {
                         <Text style={{color:'white', fontSize:20}}>{level}</Text>
                         <Text style={{color:'#80BBF0', fontSize:10}}>Sınıf Sayısı : {classes.filter(c=>c.other===level).length}</Text>
                     </View>
-                    <View style={{paddingVertical:10, borderRadius:25, backgroundColor:'#489EEA', flexDirection:'row', alignItems:'center'}}>
-                        <Text style={{marginLeft:10, flex:1, color:'white'}}>Öğrenci Sayısı</Text>
-                        <Avatar.Text label={count} size={40} style={{marginRight:10,backgroundColor:'#8CC2F2'}} color='white'/>
-                    </View>
+
                 </TouchableOpacity>
             )
         })

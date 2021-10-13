@@ -24,23 +24,51 @@ class RollCallReport extends Component {
 
         this.state={
             //selectedGroup:_class.groups.length>0?_class.groups[0]:null,
+            selectIndex:0
         }
     }
 
     componentDidMount(){
-        this.props.getRollCalls()
+        this.getData(0)
     }
 
     daysInMonth = (month, year)=> {
         return new Date(year, month, 0).getDate();
     }
 
+    getData=(index)=>{
+        let first_date=TrDateTime(new Date())
+        first_date.add(-6)
+        let end_date=Moment(new Date()).format('yyyy-MM-DD')
+        let firstDate=''
+
+        firstDate=Moment(first_date).format('yyyy-MM-DD')
+
+        if(index===1){
+            first_date=TrDateTime(new Date())
+            const dayCount=this.daysInMonth(first_date.getMonth()+1,first_date.getFullYear())
+            first_date.add(-dayCount)
+
+            firstDate=Moment(first_date).format('yyyy-MM-DD')
+        }
+
+        if(index===2){
+            firstDate=Moment(new Date()).format('yyyy')+'-01-01'
+            end_date=Moment(new Date()).format('yyyy')+'-12-31'
+        }
+
+        this.props.getRollCalls(firstDate,end_date,this.props.id,(data)=>{
+            
+        })
+
+    }
+
     render() {
 
-        const {id,classes,students,rollcalls,connecteds}=this.props
+        const {id,classes,students,rollcalls,connecteds,loading}=this.props
         const _class=classes.find(c=>c._account===id)
         const con=connecteds!==undefined?connecteds.find(elem=>elem.id===_class._account):null
-        const filter=rollcalls.rollcalls.filter(r=>r._class._account===id)
+        const filter=rollcalls.rollcalls.filter(r=>r._class===id)
         const sortRollCalls=filter.sort((a,b)=>new Date(b.day)-new Date(a.day))
         
         var today=TrDateTime(new Date(Moment(new Date()).format('YYYY-MM-DD')))
@@ -62,6 +90,8 @@ class RollCallReport extends Component {
             
             return r
         },{})
+
+        console.log('loading',sortRollCalls)
         
         return (
             <View style={[styles.background,{marginTop:ifIphoneX(20,0)}]}>
@@ -74,11 +104,8 @@ class RollCallReport extends Component {
                         <Image source={icons.Back} style={{height:'100%',width:'100%', tintColor:'#0A7ADD'}} resizeMode='contain'/>
                     </TouchableOpacity>
                     <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-                        <Text style={{color:'#042C5C',fontSize:25}}>{_class.other + " / "+_class.name}</Text>
-                        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                            <Image source={icons.Users} style={{height:20,width:20}} resizeMode='contain'/>
-                            <Text style={{fontSize:20}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
-                        </View>
+                        <Text style={{color:'#042C5C',fontSize:25}}>{"Yoklama Raporu"}</Text>
+
                     </View>
                     <View style={{...styles.profileButton}}>
                         
@@ -87,9 +114,16 @@ class RollCallReport extends Component {
                 <View style={{marginHorizontal:-10,flex:1}}>
                 <View style={{width:'100%',flex:1}}>
                     <View style={{alignItems:'center',justifyContent:'center'}}>
-                        <Text style={{color:'#042C5C', fontSize:20, marginBottom:20}}>{_class.other+" / "+_class.name + " -  Yoklama Raporu"}</Text>
+                        <Text style={{color:'#042C5C', fontSize:20, marginBottom:20}}>{_class.other+" / "+_class.name}</Text>
                     </View>
-                    <Tabs scrollEnabled={true}>
+                    {
+                        loading?
+                        <View style={{alignItems:'center',justifyContent:'center',width:'100%',marginVertical:10}}>
+                            <Image source={icons.Loading} style={{width:50,height:50,marginBottom:10}}/>
+                            <Text style={{textAlign:'center',fontSize:20}}>{"Okul Bilgileri Yükleniyor...\r\nLütfen Bekleyiniz"}</Text>
+                        </View>:<View/>
+                    }
+                    <Tabs scrollEnabled={true} onChangeIndex={(index)=>{this.getData(index)}}>
                         <Tabs.Item title='Günlük' component={
                             <ScrollView>
                                 {
@@ -238,6 +272,7 @@ const mapStateToProps = (state) => ({
     classes:state.School.school.classes,
     students:state.School.school.students,
     rollcalls:state.RollCall,
+    loading:state.RollCall.loading,
     connecteds:state.Socket.connecteds
 })
 

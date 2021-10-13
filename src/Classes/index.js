@@ -22,10 +22,7 @@ export class Classes extends Component {
                     </View>
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',height:'100%',marginRight:5}}>
                         <Text style={{fontSize:20}}>{elem.name}</Text>
-                        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                            <Image source={icons.Users} style={{height:30,width:30,marginTop:10}} resizeMode='contain'/>
-                            <Text style={{fontSize:15}}>{students.filter(s=>s._class!==null&&s._class===elem._account).length}</Text>
-                        </View>
+
                     </View>
                     <View style={{position:'absolute',right:5,top:5}}>
                         <View style={{paddingHorizontal:5,width:'100%',height:30,backgroundColor:con!==null && con!==undefined?"#2ecc71":"#e74c3c",alignItems:'center',justifyContent:'center', borderRadius:15}}>

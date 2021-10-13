@@ -16,6 +16,7 @@ import Alert from '../../components/Alert'
 import {logOut} from '../../redux/actions/auth'
 import {getRollCalls} from '../../redux/actions/rollcall'
 import {updateToken} from '../../redux/actions/school'
+import {getStudent} from '../../redux/actions/student'
 import MyModal from '../../components/MyModal'
 import {getNotifications,addNotification} from '../../redux/actions/notifications'
 import Moment from 'moment'
@@ -60,23 +61,42 @@ class StudentHome extends Component {
     };
 
     async componentDidMount() {
+        this.props.getStudent(this.props.user.id,(data)=>{
+            this.setState({student:data,loading:false})
+        })
         const token = await this.registerForPushNotificationsAsync();
-        this.props.updateToken(token,(state)=>{
+        await this.props.updateToken(token,(state)=>{
            
         })
+
+    }
+
+    componentDidUpdate(prevProp,prevState){
+        if(prevState.student!==this.state.student){
+            const _class=this.props.classes.find(c=>c._account===this.state.student._class)
+            this.setState({_class:_class})
+        }
     }
 
     constructor(props){
         super(props)
 
+        this.state={
+            student:null,
+            loading:true,
+            _class:null,
+        }
+
         this.getSchool()
-        props.loginSocket()
-        props.getReports()
-        props.getRollCalls(props.user.id)
+        //props.loginSocket()
+        //props.getReports()
+        props.getRollCalls()
         props.getNotifications()
         props.getCourses()
-
+        
     }
+
+
     message=(title,message)=>{
         this._alert.setTitle(title)
         this._alert.setMessage(message)
@@ -129,8 +149,8 @@ class StudentHome extends Component {
 
     render() {
         const {classes,students,user,rollcalls,notifications,courses}=this.props
-        const student=students!==undefined || students!==null && user!==undefined || user!==null?students.find(s=>s._account.id===user.id):null
-        const _class=classes.find(c=>c._account===student._class)
+        const {student,loading,_class} = this.state
+
         const sortNotify=notifications.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
         return (
             <ScrollView style={{padding:10,marginTop:ifIphoneX(20,0)}}>
@@ -210,11 +230,19 @@ class StudentHome extends Component {
                 <View style={{alignItems:'center',justifyContent:'center',marginBottom:20}}>
                     <Text style={{fontSize:30,color:'#F39200'}}>{this.props.school.name}</Text>
                 </View>
-                <View style={{marginBottom:20,alignItems:'center',justifyContent:'center'}}>
-                    <Text style={{fontSize:30,color:'#77869E'}}>{student!==null && student!==undefined?_class.other+' - '+_class.name +' Sınıfı '+
-                    student.number + ' Numaralı':''}</Text>
-                    <Text style={{fontSize:30,color:'#042C5C'}}>{user.first_name + " "+user.last_name}</Text>
-                </View>
+                {
+                        loading?
+                        <View style={{alignItems:'center',justifyContent:'center',width:'100%',marginVertical:10}}>
+                            <Image source={icons.Loading} style={{width:50,height:50,marginBottom:10}}/>
+                            <Text style={{textAlign:'center',fontSize:20}}>{"Okul Bilgileri Yükleniyor...\r\nLütfen Bekleyiniz"}</Text>
+                        </View>:
+                        <View style={{marginBottom:20,alignItems:'center',justifyContent:'center'}}>
+                            <Text style={{fontSize:30,color:'#77869E'}}>{student!==null && student!==undefined && _class!==null?_class.other+' - '+_class.name +' Sınıfı '+
+                            student.number + ' Numaralı':''}</Text>
+                            <Text style={{fontSize:30,color:'#042C5C'}}>{user.first_name + " "+user.last_name}</Text>
+                        </View>
+                }
+                
                 <View style={{marginBottom:20,flexDirection:'row',flexWrap:'wrap'}}>
                     <TouchableOpacity style={styles.groupItem} onPress={()=>{
                         Actions.sRollCall({student:student})
@@ -312,7 +340,8 @@ const mapDispatchToProps = {
     addNotification,
     getCourses,
     updateToken,
-    setSchool
+    setSchool,
+    getStudent
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentHome)

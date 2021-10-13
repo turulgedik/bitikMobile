@@ -6,7 +6,7 @@ import {BASE_URL} from './host'
 export const getSchool=(result=()=>{})=>(dispatch,getState)=>{
     dispatch({type:SCHOOL_LOADING})
 
-    axios.get(BASE_URL+'/school/api/School/',tokenConfig(getState))
+    axios.get(BASE_URL+'/school/api/Schoolv2/',tokenConfig(getState))
     .then(res=>{
       dispatch({
         type:SCHOOL_LOADED,
@@ -19,6 +19,18 @@ export const getSchool=(result=()=>{})=>(dispatch,getState)=>{
          type:SCHOOL_ERROR,
        })
     })
+
+}
+
+export const getTimeTable=(id,result=()=>{})=>(dispatch,getState)=>{
+  axios.get(BASE_URL+'/school/api/TimeTablev2/?class='+id,tokenConfig(getState))
+  .then(res=>{
+
+    result(res.data)
+  })
+  .catch(err=>{
+
+  })
 
 }
 

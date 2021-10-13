@@ -17,6 +17,7 @@ import {addHomeWork,getHomeWorks} from '../../redux/actions/homework'
 import {addNotification} from '../../redux/actions/notifications'
 import axios from 'axios'
 import CustomTextInput from '../../components/TextInput'
+import {getStudents} from '../../redux/actions/student'
 
 const ImageType=ImagePicker.MediaTypeOptions.Images
 const VideoType=ImagePicker.MediaTypeOptions.Videos
@@ -138,9 +139,11 @@ export class _Class extends Component {
                     this._newNotifyAll.onClose()
                     this.setState({notification:''})
                     try {
-                        this.props.students.filter(s=>s._class!==null&&s._class===this.props.id&&s._account.push_token!==null&&s._account.push_token.length>15).map(student=>{
+                        this.props.getStudents(this.props.id,(students)=>{
+                            students.filter(s=>s._class!==null&&s._class===this.props.id&&s._account.push_token!==null&&s._account.push_token.length>15).map(student=>{
                         
-                            this.sendPushNotification(student,data.notification)
+                                this.sendPushNotification(student,data.notification)
+                            })
                         })
                     } catch (error) {
                         console.log('hata',error)
@@ -177,7 +180,8 @@ export class _Class extends Component {
 
     render() {
 
-        const {id,classes,students,connecteds,app,homeWork,user}=this.props
+        const {id,classes,connecteds,app,homeWork,user}=this.props
+        const {students}=this.state
         const filterHomeWorks=homeWork.filter(h=>h._class._account===id)
         const sortHomeWorks=filterHomeWorks.sort((a,b)=>new Date(b.dateTime)-new Date(a.dateTime))
 
@@ -401,10 +405,6 @@ export class _Class extends Component {
                     </TouchableOpacity>
                     <View style={{flex:1,marginRight:-50,alignItems:'center',justifyContent:'center'}}>
                         <Text style={{color:'#042C5C',fontSize:25}}>{_class.other + " / "+_class.name}</Text>
-                        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                            <Image source={icons.Users} style={{height:20,width:20}} resizeMode='contain'/>
-                            <Text style={{fontSize:20}}>{students.filter(s=>s._class!==null&&s._class===id).length}</Text>
-                        </View>
                     </View>
                     <View style={{...styles.profileButton,backgroundColor:con!==null && con!==undefined?"#2ecc71":"#e74c3c"}}>
                         <Text style={{color:'white'}}>Tahta {con!==null && con!==undefined?"Açık":"Kapalı"}</Text>
@@ -662,7 +662,6 @@ export class _Class extends Component {
 
 const mapStateToProps = (state) => ({
     classes:state.School.school.classes,
-    students:state.School.school.students,
     connecteds:state.Socket.connecteds,
     app:state.App,
     homeWork:state.HomeWork.homeworks,
@@ -679,7 +678,8 @@ const mapDispatchToProps = {
     getHomeWorks,
     addNotification,
     showPassword,
-    shutDown
+    shutDown,
+    getStudents
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(_Class)
